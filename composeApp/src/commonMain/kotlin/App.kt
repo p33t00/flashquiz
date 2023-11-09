@@ -1,17 +1,6 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
@@ -20,8 +9,16 @@ import moe.tlaster.precompose.navigation.transition.NavTransition
 //import dev.icerock.moko.mvvm.compose.getViewModel
 //import dev.icerock.moko.mvvm.compose.viewModelFactory
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import ui.screens.LoginScreen
+import ui.screens.MainScreen
+import ui.screens.QuizListScreen
+import ui.screens.SubScreen
 
+enum class RoutesToScreen(val title: String) {
+    Home("/home"),
+    Login("/login"),
+    QuizList("/quizlist")
+}
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
@@ -45,31 +42,40 @@ fun App() {
 //            }
 
             val navigator = rememberNavigator()
+
+//            Scaffold {
+//
+//            }
             NavHost(
-                // Assign the navigator to the NavHost
                 navigator = navigator,
-                // Navigation transition for the scenes in this NavHost, this is optional
                 navTransition = NavTransition(),
-                // The start destination
-                initialRoute = "/home",
+                initialRoute = RoutesToScreen.Login.name,
             ) {
-                // Define a scene to the navigation graph
                 scene(
-                    // Scene's route path
-                    route = "/home",
-                    // Navigation transition for this scene, this is optional
+                    route = RoutesToScreen.Home.name,
                     navTransition = NavTransition(),
                 ) {
                     MainScreen({navigator.navigate("/sub/12")})
                 }
                 scene(
-                    // Scene's route path
-                    route = "/sub/{id}",
-                    // Navigation transition for this scene, this is optional
+                    route = RoutesToScreen.Home.name + "/{id}",
                     navTransition = NavTransition(),
                 ) {backStackEntry ->
                     SubScreen(backStackEntry.path<Int>("id"), {navigator.navigate("/home")})
                 }
+                scene(
+                    route = RoutesToScreen.Login.name,
+                    navTransition = NavTransition(),
+                ) {
+                    LoginScreen()
+                }
+                scene(
+                    route = RoutesToScreen.QuizList.name,
+                    navTransition = NavTransition(),
+                ) {
+                    QuizListScreen()
+                }
+                // TODO: Please add more screens and don't forget to add RoutesToScreen route path
             }
 
         }
