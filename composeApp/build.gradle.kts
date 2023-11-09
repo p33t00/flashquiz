@@ -37,19 +37,24 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(compose.animation)
             implementation(compose.material)
+            implementation(compose.material3)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
-            api("dev.icerock.moko:mvvm-core:0.16.1")
-            api("dev.icerock.moko:mvvm-flow:0.16.1")
-            api("dev.icerock.moko:mvvm-compose:0.16.1")
-            api("dev.icerock.moko:mvvm-flow-compose:0.16.1")
+            api("moe.tlaster:precompose:1.5.7")
+            api("moe.tlaster:precompose-viewmodel:1.5.7")
+//            api("moe.tlaster:precompose-koin:1.5.7")
+//            api("dev.icerock.moko:mvvm-core:0.16.1")
+//            api("dev.icerock.moko:mvvm-flow:0.16.1")
+//            api("dev.icerock.moko:mvvm-compose:0.16.1")
+//            api("dev.icerock.moko:mvvm-flow-compose:0.16.1")
         }
     }
 }
 
 android {
-    namespace = "org.example.project"
+    namespace = "com.pa1479.bth.g3.flashquiz"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")

@@ -1,4 +1,4 @@
-package org.example.project
+package com.pa1479.bth.g3.flashquiz
 
 import App
 import android.os.Bundle
