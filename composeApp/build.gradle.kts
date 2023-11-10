@@ -104,5 +104,13 @@ android {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
+dependencies {
+
+    implementation("androidx.compose.ui:ui:$1.0.1")
+
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
+
+}
 
 
