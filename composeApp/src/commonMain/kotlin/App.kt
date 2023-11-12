@@ -18,6 +18,7 @@ import moe.tlaster.precompose.navigation.transition.NavTransition
 //import dev.icerock.moko.mvvm.compose.getViewModel
 //import dev.icerock.moko.mvvm.compose.viewModelFactory
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.koin.compose.rememberKoinInject
 import ui.components.AppBar
 import ui.screens.LoginScreen
 import ui.screens.MainScreen

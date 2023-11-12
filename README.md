@@ -12,3 +12,9 @@ This is a Kotlin Multiplatform project targeting Android, iOS.
 
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+
+### Resources:
+- PreCompose: https://tlaster.github.io/PreCompose/
+- PreCompose (Koin) implementation (iOS):
+  https://medium.com/@nitheeshag/building-a-compose-multiplatform-app-with-an-architectural-pattern-e31a85e82927

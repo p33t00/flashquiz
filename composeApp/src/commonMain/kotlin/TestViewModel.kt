@@ -3,8 +3,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import moe.tlaster.precompose.stateholder.SavedStateHolder
 import moe.tlaster.precompose.viewmodel.ViewModel
 
-//import dev.icerock.moko.mvvm.viewmodel.ViewModel
-
 class TestViewModel(savedStateHolder: SavedStateHolder): ViewModel() {
     private val _someSavedValue = MutableStateFlow(savedStateHolder.consumeRestored("someValue") as String? ?: "DefaultHello")
     val soSaVal = _someSavedValue.asStateFlow()

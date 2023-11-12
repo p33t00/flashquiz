@@ -45,11 +45,9 @@ kotlin {
             implementation(compose.components.resources)
             api("moe.tlaster:precompose:1.5.7")
             api("moe.tlaster:precompose-viewmodel:1.5.7")
-//            api("moe.tlaster:precompose-koin:1.5.7")
-//            api("dev.icerock.moko:mvvm-core:0.16.1")
-//            api("dev.icerock.moko:mvvm-flow:0.16.1")
-//            api("dev.icerock.moko:mvvm-compose:0.16.1")
-//            api("dev.icerock.moko:mvvm-flow-compose:0.16.1")
+            api("moe.tlaster:precompose-koin:1.5.7")
+            api("io.insert-koin:koin-core:3.5.0")
+            api("io.insert-koin:koin-compose:1.1.0")
         }
     }
 }
