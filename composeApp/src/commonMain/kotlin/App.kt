@@ -15,10 +15,7 @@ import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
-//import dev.icerock.moko.mvvm.compose.getViewModel
-//import dev.icerock.moko.mvvm.compose.viewModelFactory
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.koin.compose.rememberKoinInject
+import org.koin.compose.KoinContext
 import ui.components.AppBar
 import ui.screens.LoginScreen
 import ui.screens.MainScreen
@@ -34,18 +31,19 @@ enum class RoutesToScreen(val title: String) {
 @Composable
 fun App() {
     PreComposeApp {
-        val navigator = rememberNavigator()
-        var currentScreen by remember { mutableStateOf(RoutesToScreen.Home) }
-        val scope = rememberCoroutineScope()
+        KoinContext {
+            val navigator = rememberNavigator()
+            var currentScreen by remember { mutableStateOf(RoutesToScreen.Home) }
+            val scope = rememberCoroutineScope()
 
-        scope.launch {
-            navigator.currentEntry.collect {
-                currentScreen = RoutesToScreen.valueOf(it?.path?.substringBefore("/") ?: "Home")
-                println(currentScreen.name)
+            scope.launch {
+                navigator.currentEntry.collect {
+                    currentScreen = RoutesToScreen.valueOf(it?.path?.substringBefore("/") ?: "Home")
+                    println(currentScreen.name)
+                }
             }
-        }
-        
-        MaterialTheme {
+
+            MaterialTheme {
 //            var greetingText by remember { mutableStateOf("Hello World!") }
 //            var showImage by remember { mutableStateOf(false) }
 //            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -63,14 +61,14 @@ fun App() {
 //                }
 //            }
 
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = androidx.compose.material3.MaterialTheme.colorScheme.background
-            ) {
-                Scaffold(
-                    topBar = {
-                        if (currentScreen != RoutesToScreen.Login) {
-                            AppBar(currentScreen)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.background
+                ) {
+                    Scaffold(
+                        topBar = {
+                            if (currentScreen != RoutesToScreen.Login) {
+                                AppBar(currentScreen)
 //                            AppBar(
 //                                currentScreen,
 //                                navController::navigateUp,
@@ -82,42 +80,43 @@ fun App() {
 //                                navController.previousBackStackEntry != null,
 //                                { logOutHandler() }
 //                            )
+                            }
                         }
-                    }
-                ) {
-                    NavHost(
-                        navigator = navigator,
-                        navTransition = NavTransition(),
-                        initialRoute = RoutesToScreen.Home.name,
                     ) {
-                        scene(
-                            route = RoutesToScreen.Home.name,
+                        NavHost(
+                            navigator = navigator,
                             navTransition = NavTransition(),
+                            initialRoute = RoutesToScreen.Home.name,
                         ) {
-                            MainScreen({ navigator.navigate(RoutesToScreen.SubScreen.name + "/12") })
+                            scene(
+                                route = RoutesToScreen.Home.name,
+                                navTransition = NavTransition(),
+                            ) {
+                                MainScreen({ navigator.navigate(RoutesToScreen.SubScreen.name + "/12") })
+                            }
+                            scene(
+                                route = RoutesToScreen.SubScreen.name + "/{id}",
+                                navTransition = NavTransition(),
+                            ) { backStackEntry ->
+                                SubScreen(
+                                    backStackEntry.path<Int>("id"),
+                                    { navigator.navigate(RoutesToScreen.Home.name) }
+                                )
+                            }
+                            scene(
+                                route = RoutesToScreen.Login.name,
+                                navTransition = NavTransition(),
+                            ) {
+                                LoginScreen()
+                            }
+                            scene(
+                                route = RoutesToScreen.QuizList.name,
+                                navTransition = NavTransition(),
+                            ) {
+                                QuizListScreen()
+                            }
+                            // TODO: Please add more screens and don't forget to add RoutesToScreen route path
                         }
-                        scene(
-                            route = RoutesToScreen.SubScreen.name + "/{id}",
-                            navTransition = NavTransition(),
-                        ) { backStackEntry ->
-                            SubScreen(
-                                backStackEntry.path<Int>("id"),
-                                { navigator.navigate(RoutesToScreen.Home.name) }
-                            )
-                        }
-                        scene(
-                            route = RoutesToScreen.Login.name,
-                            navTransition = NavTransition(),
-                        ) {
-                            LoginScreen()
-                        }
-                        scene(
-                            route = RoutesToScreen.QuizList.name,
-                            navTransition = NavTransition(),
-                        ) {
-                            QuizListScreen()
-                        }
-                        // TODO: Please add more screens and don't forget to add RoutesToScreen route path
                     }
                 }
             }

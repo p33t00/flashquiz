@@ -6,17 +6,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
-import moe.tlaster.precompose.viewmodel.viewModel
-
-//import dev.icerock.moko.mvvm.compose.getViewModel
-//import dev.icerock.moko.mvvm.compose.viewModelFactory
+import moe.tlaster.precompose.koin.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MainScreen(onNavigate: () -> Unit) {
-//    val viewModel = getViewModel(Unit, viewModelFactory { TestViewModel() })
-    val viewModel = viewModel(modelClass = TestViewModel::class, keys = listOf()) { savedStateHolder ->
-        TestViewModel(savedStateHolder)
-    }
+    val viewModel = koinViewModel(vmClass = TestViewModel::class) { parametersOf() }
 
     val someVal = viewModel.soSaVal.collectAsStateWithLifecycle()
     Column {
