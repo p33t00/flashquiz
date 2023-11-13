@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
-//    id("com.squareup.sqldelight")
 }
 
 kotlin {
@@ -93,6 +92,12 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    sqldelight {
+        database("FlashCardsDB") {
+            packageName = "com.pa1479.bth.g3.flashquiz.database"
+            sourceFolders = listOf("sqldelight")
+        }
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
