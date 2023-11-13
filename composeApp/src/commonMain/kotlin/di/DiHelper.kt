@@ -1,17 +1,18 @@
 package di
 
+import DBDriverFactory
 import TestViewModel
-import org.koin.core.context.startKoin
+import com.pa1479.bth.g3.flashquiz.database.FlashCardsDB
 import org.koin.dsl.module
-
-fun initKoin() = startKoin {
-    modules(
-        appModules
-    )
-}
 
 val appModules = module {
     single { "hello" }
+
+    single {
+        val driverFactory = DBDriverFactory(get())
+        val driver = driverFactory.createDriver()
+        FlashCardsDB(driver)
+    }
 
     factory {
         TestViewModel(get())

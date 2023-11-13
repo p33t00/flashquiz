@@ -1,0 +1,9 @@
+CREATE TABLE quiz (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+INSERT INTO quiz (`name`) VALUES ('Some test quiz');
+
+getQuizzes:
+SELECT * FROM quiz ORDER BY `name` ASC;

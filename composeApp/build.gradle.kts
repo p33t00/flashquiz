@@ -34,10 +34,11 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
-            implementation("com.squareup.sqldelight:android-driver:1.5.5")
+            implementation(libs.android.driver)
+            implementation(libs.koin.android)
         }
         iosMain.dependencies {
-            implementation("com.squareup.sqldelight:native-driver:1.5.5")
+            implementation(libs.native.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -45,15 +46,13 @@ kotlin {
             implementation(compose.animation)
             implementation(compose.material)
             implementation(compose.material3)
-            implementation("com.squareup.sqldelight:runtime:1.5.5")
-            implementation("com.squareup.sqldelight:coroutines-extensions:1.5.5")
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
-            api("moe.tlaster:precompose:1.5.7")
-            api("moe.tlaster:precompose-viewmodel:1.5.7")
-            api("moe.tlaster:precompose-koin:1.5.7")
-            api("io.insert-koin:koin-core:3.5.0")
-            api("io.insert-koin:koin-compose:1.1.0")
+            api(libs.precompose)
+            api(libs.precompose.viewmodel)
+            api(libs.precompose.koin)
+            api(libs.koin.core)
+            api(libs.koin.compose)
         }
     }
 }
@@ -94,13 +93,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     sqldelight {
-        database("FlashCardsDB") {
-            packageName = "com.pa1479.bth.g3.flashquiz.database"
-            sourceFolders = listOf("sqldelight")
+        databases {
+            create("FlashCardsDB") {
+                packageName.set("com.pa1479.bth.g3.flashquiz.database")
+            }
         }
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
+
 
