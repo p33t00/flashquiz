@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.sqldelight)
+//    id("com.squareup.sqldelight")
 }
 
 kotlin {
@@ -29,11 +31,14 @@ kotlin {
     }
     
     sourceSets {
-        
         androidMain.dependencies {
             implementation(libs.compose.ui)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("com.squareup.sqldelight:android-driver:1.5.5")
+        }
+        iosMain.dependencies {
+            implementation("com.squareup.sqldelight:native-driver:1.5.5")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -41,6 +46,8 @@ kotlin {
             implementation(compose.animation)
             implementation(compose.material)
             implementation(compose.material3)
+            implementation("com.squareup.sqldelight:runtime:1.5.5")
+            implementation("com.squareup.sqldelight:coroutines-extensions:1.5.5")
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             api("moe.tlaster:precompose:1.5.7")
