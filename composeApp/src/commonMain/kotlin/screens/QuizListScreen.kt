@@ -52,14 +52,30 @@ fun QuizListScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
+
             Spacer(modifier = Modifier.height(20.dp))
+
 
             Text(
                 text = "Welcome to FlashQuiz",
                 fontSize = 25.sp,
-                color = Color(0xFF6A1B9A),
+                color = Color(0xFF926EB4),
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.Center)
+                    .padding(vertical = 40.dp)
+            )
+
+            Text(
+                text = "Quiz List",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .wrapContentSize(Alignment.Center)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -78,25 +94,34 @@ fun QuizListScreen(
             }
         }
 
+        // add quiz button
         FloatingActionButton(
             onClick = onAddQuizClick,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp),
-                backgroundColor = Color(0xFF6A1B9A)
+                backgroundColor = Color(0xFF926EB4),
         ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(26.dp)
+            )
         }
 
         Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(16.dp)
+                .clickable {
+                    onLogoutClick.invoke()
+                }
         ) {
 
 
             Icon(
-                imageVector = Icons.Default.AccountCircle,
+                imageVector = Icons.Default.AccountCircle, //icon to be changed
                 contentDescription = null,
                 tint = Color.Black,
                 modifier = Modifier.size(28.dp)
@@ -128,9 +153,14 @@ fun QuizListScreen(
                             deleteConfirmation = false
                             checkedQuizzes.forEach { quizModel.removeQuiz(it) }
                             checkedQuizzes.clear()
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF926EB4),
+                            contentColor = Color.White
+                        )
                     ) {
-                        Text("Yes")
+                        Text("Yes", color = Color.White)
+
                     }
                 },
                 dismissButton = {
@@ -138,9 +168,13 @@ fun QuizListScreen(
                         onClick = {
                             deleteConfirmation = false
                             checkedQuizzes.clear()
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF926EB4),
+                            contentColor = Color.White
+                        )
                     ) {
-                        Text("No")
+                        Text("No", color = Color.White)
                     }
                 }
             )
