@@ -5,20 +5,19 @@ import kotlinx.coroutines.flow.StateFlow
 
 class LoginModel {
 
-    private val _emailState = MutableStateFlow("")
-    val emailState: StateFlow<String> = _emailState
+    private val email = MutableStateFlow("")
+    val emailState: StateFlow<String> = email
 
-    private val _passwordState = MutableStateFlow("")
-    val passwordState: StateFlow<String> = _passwordState
+    private val password = MutableStateFlow("")
+    val passwordState: StateFlow<String> = password
 
 
-    //handle login button click
+    //handle login
     fun onLoginClick(onNavigateToSignUp: () -> Unit) {
-        // Add your login logic here
-        // For simplicity, just print the entered email and password
-        println("Email: ${_emailState.value}, Password: ${_passwordState.value}")
+        println("Email: ${email.value}, Password: ${password.value}")
 
         // navigate to SignUpScreen
         onNavigateToSignUp.invoke()
+
     }
 }

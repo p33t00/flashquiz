@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
@@ -110,6 +109,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
+
+    implementation(libs.androidx.ui.tooling.preview.android)
+
 
 }
 
