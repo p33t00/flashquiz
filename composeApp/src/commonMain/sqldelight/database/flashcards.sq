@@ -3,7 +3,52 @@ CREATE TABLE quiz (
     name TEXT NOT NULL
 );
 
-INSERT INTO quiz (`name`) VALUES ('Some test quiz');
+CREATE TABLE card (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    quiz_id INTEGER NOT NULL,
+    question TEXT NOT NULL,
+    answer_a TEXT NOT NULL,
+    answer_b TEXT NOT NULL,
+    answer_c TEXT NOT NULL,
+    answer_d TEXT NOT NULL,
+    correct TEXT NOT NULL
+);
+
+CREATE TABLE achievements (
+    quiz_id INTEGER NOT NULL,
+    score TEXT NOT NULL,
+    created TEXT NOT NULL
+);
 
 getQuizzes:
-SELECT * FROM quiz ORDER BY `name` ASC;
+SELECT * FROM quiz ORDER BY name ASC;
+
+getQuizAchievements:
+SELECT * FROM achievements WHERE quiz_id = ? ORDER BY created ASC;
+
+getQuizCards:
+SELECT * FROM card WHERE id = ?;
+
+
+deleteCard:
+DELETE FROM card WHERE id = ?;
+
+deleteQuiz {
+    DELETE FROM quiz WHERE id = :id;
+    DELETE FROM card WHERE quiz_id = :id;
+}
+
+
+INSERT INTO quiz (`name`) VALUES
+('Spanish Lang'),
+('Math quiz');
+
+INSERT INTO card (quiz_id, question, answer_a, answer_b, answer_c, answer_d, correct)
+VALUES
+(1, "How are you ?", "good", "bad", "fine", "perfect", "good"),
+(1, "What are you doing ?", "Eating", "Homework", "Cooking", "Nothing", "Nothing");
+
+INSERT INTO achievements (quiz_id, score, created) VALUES
+(1, '2/5', '2023.10.22'),
+(1, '3/5', '2023.11.01'),
+(1, '5/5', '2023.11.10');
