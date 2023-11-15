@@ -10,13 +10,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import models.LoginModel
-import models.Quiz
 import models.QuizModel
 import models.SignupModel
-import screens.LoginScreen
-import screens.QuizListScreen
-import screens.QuizViewScreen
-import screens.SignUpScreen
+import ui.screens.LoginScreen
+import ui.screens.QuizListScreen
+import ui.screens.QuizStatsScreen
+import ui.screens.QuizViewScreen
+import ui.screens.SignUpScreen
 
 class MainActivity : ComponentActivity() {
     @ExperimentalFoundationApi
@@ -28,14 +28,6 @@ class MainActivity : ComponentActivity() {
         val signupModel = SignupModel()
         val quizModel = QuizModel()
 
-        // for testing
-        val dummyQuizzes = listOf(
-            Quiz("Ml math basics"),
-            Quiz("Spanish level 2"),
-            Quiz("Standard deviation basics"),
-        )
-
-        dummyQuizzes.forEach { quizModel.addQuiz(it) }
 
         // Launch Compose UI
         setContent {
@@ -64,10 +56,27 @@ class MainActivity : ComponentActivity() {
                         quizModel = quizModel,
                         onAddQuizClick = { /* navigate to add quiz screen */ },
                         onLogoutClick = { navController.navigate("login") },
-                                onQuizClick = { selectedQuiz ->
-                            navController.navigate("quiz/${selectedQuiz.name}")
+                        onQuizClick = { selectedQuiz ->
+                            navController.navigate("quizStats/${selectedQuiz.name}")
                         }
                     )
+                }
+                composable("quizStats/{quizName}") { backStackEntry ->
+                    val quizName = backStackEntry.arguments?.getString("quizName")
+                    val selectedQuiz = quizModel.quizList.value.find { it.name == quizName }
+
+                    selectedQuiz?.let {
+                        QuizStatsScreen(
+                            quiz = it,
+                            onBackClick = { navController.popBackStack() },
+                            onEditQuizClick = {},
+                            onDeleteQuizClick = {},
+                            onLogoutClick = { navController.navigate("login") },
+                            onQuizClick = {
+                                navController.navigate("quiz/${selectedQuiz.name}")
+                            }
+                        )
+                    }
                 }
                 composable("quiz/{quizName}") { backStackEntry ->
                     val quizName = backStackEntry.arguments?.getString("quizName")
@@ -80,6 +89,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
+
             }
         }
     }

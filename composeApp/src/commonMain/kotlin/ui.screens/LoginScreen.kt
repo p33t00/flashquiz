@@ -1,5 +1,4 @@
-package screens
-
+package ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -32,14 +32,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import models.SignupModel
+import models.LoginModel
+
 
 @Composable
-fun SignUpScreen( onSignupButtonClick: () -> Unit,
-                  onNavigateToLogin: () -> Unit,
-                  signupModel: SignupModel) {
+fun LoginScreen(  onLoginButtonClick: () -> Unit,
+                  onNavigateToSignUp: () -> Unit,
+                  loginModel: LoginModel) {
 
-    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -51,32 +51,23 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
 
         Text(
             text = "FlashQuiz",
-            fontSize = 40.sp,
+            fontSize = 42.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             color =  Color(0xFF926EB4),
-            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
+            modifier = Modifier.fillMaxWidth()
+                .padding(vertical = 32.dp)
         )
 
         Text(
-            text = "Sign up",
-            fontSize = 26.sp,
+            text = "Login",
+            fontSize = 24.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
+            modifier = Modifier.fillMaxWidth()
+                .padding(vertical = 30.dp)
         )
 
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Username") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
@@ -105,9 +96,9 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // sign-up button
+        // login button
         Button(
-            onClick = { onSignupButtonClick.invoke() },
+            onClick = { onLoginButtonClick.invoke() },
             modifier = Modifier
                 .width(200.dp)
                 .padding(top = 8.dp, bottom = 8.dp)
@@ -122,17 +113,20 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
             contentPadding = PaddingValues(16.dp),
         ) {
             Text(
-                text = "Sign up",
+                text = "Log in",
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
+                fontSize = 14.sp,
             )
         }
 
-        // go back button
+
+        // sign up button
         Button(
-            onClick = { onNavigateToLogin.invoke() },
+            onClick = { onNavigateToSignUp.invoke() },
             modifier = Modifier.fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .clip(MaterialTheme.shapes.medium),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Transparent,
                 contentColor =  Color(0xFF926EB4),
@@ -144,13 +138,11 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
             contentPadding = PaddingValues(16.dp),
         ) {
             Text(
-                text = "Go back",
-                fontSize = 12.sp,
+                text = "Don't have an account? Sign up now",
                 fontWeight = FontWeight.Bold,
-                color =  Color(0xFF926EB4),
+                fontSize = 12.sp,
+                color = Color(0xFF926EB4)
             )
         }
     }
-
-
 }
