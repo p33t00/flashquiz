@@ -1,4 +1,3 @@
-
 package models
 
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -9,47 +8,51 @@ import kotlinx.coroutines.flow.StateFlow
 data class Quiz(
     val name: String,
     var isChecked: Boolean = false,
-    val questions: List<Question>
-)
-
-data class Answer(
-    val text: String,
-    val isCorrect: Boolean
+    val questions: List<Question>,
+    val stats: List<QuizStat> = emptyList()
 )
 
 data class Question(
-    val text: String,
-    val answers: List<Answer>
+    var text: String,
+    var correctAnswer: String,
+    var alternateOption1: String,
+    var alternateOption2: String,
+    var alternateOption3: String
+)
+data class QuizStat(
+    val score: Int,
+    val totalQuestions: Int,
+    val date: String
 )
 
 class QuizModel {
     private val list = MutableStateFlow<List<Quiz>>(emptyList())
     val quizList: StateFlow<List<Quiz>> = list
 
-    init {   // for testing
+    init {
+        // for testing
         val dummyQuizzes = listOf(
             Quiz(
                 name = "Ml math basics",
                 questions = listOf(
                     Question(
-                        text = "What is 2 + 2?",
-                        answers = listOf(
-                            Answer(text = "3", isCorrect = false),
-                            Answer(text = "4", isCorrect = true),
-                            Answer(text = "5", isCorrect = false)
-                        )
+                        text = "Find the Missing Term in Multiples of 6: \n 6, 12, 18, 24, _, 36, 42, _ 54, 60: \n",
+                        correctAnswer = "32, 45",
+                        alternateOption1 = "30, 48",
+                        alternateOption2 = "24, 40",
+                        alternateOption3 = "25, 49"
                     ),
                     Question(
                         text = "What is 2 + 3?",
-                        answers = listOf(
-                            Answer(text = "3", isCorrect = false),
-                            Answer(text = "4", isCorrect = false),
-                            Answer(text = "5", isCorrect = true)
-                        )
-                    )
+                        correctAnswer = "5",
+                        alternateOption1 = "3",
+                        alternateOption2 = "4",
+                        alternateOption3 = "1"
+                    ),
+                )
                 )
             )
-        )
+
 
         list.value = dummyQuizzes
     }
@@ -57,14 +60,23 @@ class QuizModel {
     private val deleted = MutableSharedFlow<Quiz>()
     val deletedQuiz: SharedFlow<Quiz> = deleted
 
-    fun addQuiz(quiz: Quiz) {
-        list.value = list.value + quiz
-    }
-
     fun removeQuiz(quiz: Quiz) {
         list.value = list.value - quiz
 
         // notify ui
         deleted.tryEmit(quiz)
     }
+
+    fun addQuizStat(
+        quiz: Quiz,
+        score: Int,
+        totalQuestions: Int,
+        date: String) {
+
+        val updatedQuiz = quiz.copy(
+            stats = quiz.stats + QuizStat(score, totalQuestions, date))
+        list.value = list.value.map { if (it == quiz) updatedQuiz else it }
+    }
+
 }
+

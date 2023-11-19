@@ -68,9 +68,12 @@ class MainActivity : ComponentActivity() {
                     selectedQuiz?.let {
                         QuizStatsScreen(
                             quiz = it,
+                            quizModel = quizModel,
                             onBackClick = { navController.popBackStack() },
                             onEditQuizClick = {},
-                            onDeleteQuizClick = {},
+                            onDeleteQuizClick = { navController.navigate("quizList") {
+                                popUpTo("quizStatsScreen") { inclusive = true }
+                            }},
                             onLogoutClick = { navController.navigate("login") },
                             onQuizClick = {
                                 navController.navigate("quiz/${selectedQuiz.name}")
@@ -85,7 +88,8 @@ class MainActivity : ComponentActivity() {
                     selectedQuiz?.let {
                         QuizViewScreen(
                             quiz = it,
-                            onBackClick = { navController.popBackStack() }
+                            onBackClick = { navController.popBackStack() },
+                            backToQuizListClick = { navController.navigate("quizList")}
                         )
                     }
                 }

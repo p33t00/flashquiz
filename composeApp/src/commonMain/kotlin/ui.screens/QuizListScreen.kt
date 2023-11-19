@@ -119,7 +119,7 @@ fun QuizListScreen(
 
                 Text(
                     text = "Quiz List",
-                    fontSize = 18.sp,
+                    fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
                     modifier = Modifier
@@ -168,23 +168,32 @@ fun QuizListScreen(
                 )
             }
 
-            // Snack bar to display message
+
+
+              // Snack bar to display message
             if (showSnackbar) {
                 LaunchedEffect(showSnackbar) {
-                    delay(3000)
+                    delay(2000)
                     showSnackbar = false
                 }
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        TextButton(
-                            onClick = { showSnackbar = false }
-                        ) {
-                            Text("Dismiss", color = Color.White)
-                        }
-                    }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0x99000000))
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(snackbarMessage)
+                    Snackbar(
+                        action = {
+                            TextButton(
+                                onClick = { showSnackbar = false }
+                            ) {
+                                Text("Dismiss", color = Color.White)
+                            }
+                        }
+                    ) {
+                        Text(snackbarMessage, color = Color.White)
+                    }
                 }
             }
         }
@@ -207,9 +216,8 @@ fun QuizListScreen(
         }
     }
 }
-
 @Composable
-private fun DeleteConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun DeleteConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {
             onDismiss.invoke()
@@ -258,7 +266,7 @@ fun QuizItemRow(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(6.dp)
             .clickable {
                 onQuizClick.invoke(quiz)
             }
@@ -268,7 +276,7 @@ fun QuizItemRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -285,7 +293,7 @@ fun QuizItemRow(
 
             Text(
                 text = quiz.name,
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )

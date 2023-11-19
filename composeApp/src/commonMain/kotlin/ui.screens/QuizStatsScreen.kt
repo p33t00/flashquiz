@@ -1,10 +1,16 @@
 package ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
@@ -25,13 +31,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import models.Quiz
+import models.QuizModel
+import models.QuizStat
 
 @Composable
 fun QuizStatsScreen(
     quiz: Quiz,
+    quizModel: QuizModel,
     onBackClick: () -> Unit,
     onEditQuizClick: () -> Unit,
     onDeleteQuizClick: () -> Unit,
@@ -39,6 +49,7 @@ fun QuizStatsScreen(
     onQuizClick: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -46,19 +57,20 @@ fun QuizStatsScreen(
                 title = {
                     Text(
                         text = "Quiz: ${quiz.name}",
-                        fontSize = 16.sp,
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                        modifier = Modifier.fillMaxWidth().padding(14.dp)
                     )
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { onBackClick() }
+                        onClick = { onBackClick() },
+                        modifier = Modifier.size(34.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = null,
+                            contentDescription = "Back",
                             tint = Color.Black
                         )
                     }
@@ -73,6 +85,7 @@ fun QuizStatsScreen(
                             tint = Color.Black
                         )
                     }
+
                     DropdownMenu(
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false },
@@ -80,15 +93,19 @@ fun QuizStatsScreen(
                             .padding(end = 8.dp)
                     ) {
                         DropdownMenuItem(onClick = {
-                            onEditQuizClick() }) {
+                            onEditQuizClick()
+                        }) {
                             Text("Edit Quiz")
                         }
                         DropdownMenuItem(onClick = {
-                            onDeleteQuizClick() }) {
+                            showDialog = true
+                        }) {
                             Text("Delete Quiz")
                         }
+
                         DropdownMenuItem(onClick = {
-                            onLogoutClick() }) {
+                            onLogoutClick()
+                        }) {
                             Text("Logout")
                         }
                     }
@@ -101,18 +118,53 @@ fun QuizStatsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+        }
+            //display quiz statistics if available
+            if (quiz.stats.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    items(quiz.stats) { stat ->
+                        QuizStatItem(stat)
+                    }
+                }
+            } else {
 
-            // add statistics display later here
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                Text(
+                    text = "No quiz stats available.",
+                    fontSize = 17.sp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+            }
 
-            // start quiz button
+        // Start quiz button
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
             FloatingActionButton(
                 onClick = onQuizClick,
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(20.dp)
                     .widthIn(150.dp),
                 backgroundColor = Color(0xFFD6C1DF),
             ) {
@@ -120,10 +172,51 @@ fun QuizStatsScreen(
                     text = "Start Quiz",
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
-
                 )
             }
+        }
+    }
 
+        //delete confirmation dialog
+        if (showDialog) {
+            DeleteConfirmationDialog(
+                onConfirm = {
+                    // Remove quiz from the model
+                    quizModel.removeQuiz(quiz)
+                    showDialog = false
+
+                    // Navigate back to quiz list
+                    onBackClick()
+                },
+                onDismiss = {
+                    showDialog = false
+                }
+                )
+            }
+        }
+
+
+@Composable
+fun QuizStatItem(stat: QuizStat) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "${stat.score}/${stat.totalQuestions} scored on ${stat.date}",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
         }
     }
 }
+

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import models.LoginModel
 
-
+// login ui code help from: https://medium.com/@dheerubhadoria/compose-multi-platform-login-screen-android-ios-desktop-app-1df1dd424932
 @Composable
 fun LoginScreen(  onLoginButtonClick: () -> Unit,
                   onNavigateToSignUp: () -> Unit,
