@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import models.FlashcardModel
 import models.LoginModel
 import models.QuizModel
 import models.SignupModel
@@ -17,6 +18,7 @@ import ui.screens.QuizListScreen
 import ui.screens.QuizStatsScreen
 import ui.screens.QuizViewScreen
 import ui.screens.SignUpScreen
+import ui.screens.CreateQuizScreen
 
 class MainActivity : ComponentActivity() {
     @ExperimentalFoundationApi
@@ -27,6 +29,7 @@ class MainActivity : ComponentActivity() {
         val loginModel = LoginModel()
         val signupModel = SignupModel()
         val quizModel = QuizModel()
+        val flashcardModel = FlashcardModel()
 
 
         // Launch Compose UI
@@ -54,7 +57,7 @@ class MainActivity : ComponentActivity() {
                 composable("quizList") {
                     QuizListScreen(
                         quizModel = quizModel,
-                        onAddQuizClick = { /* navigate to add quiz screen */ },
+                        onAddQuizClick = { navController.navigate("createQuiz") },
                         onLogoutClick = { navController.navigate("login") },
                         onQuizClick = { selectedQuiz ->
                             navController.navigate("quizStats/${selectedQuiz.name}")
@@ -90,6 +93,33 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                composable("createQuiz") {
+                    CreateQuizScreen(
+                        onLogoutClick = { navController.navigate("login") },
+                        onSaveClick = { navController.popBackStack() },
+                        onBackClick = { navController.popBackStack() }
+                    )
+                }
+/*
+                composable("createFlashcard") {
+                    CreateFlashcardScreen(
+                        onClick = { navController.popBackStack() }, // todo: This should save flashcard values
+                        onBackClick = { navController.popBackStack() }
+                    )
+                }
+                composable("flashcard/{flashcardName}") { backStackEntry ->
+                    val flashcardName = backStackEntry.arguments?.getString("question")
+                    val selectedFlashcard = flashcardModel.flashcardList.value.find { it.question == flashcardName }
+
+                    selectedFlashcard?.let {
+                        FlashcardViewScreen(
+                            flashcard = it,
+                            onBackClick = { navController.popBackStack() }
+                        )
+                    }
+                }
+
+ */
             }
         }
     }

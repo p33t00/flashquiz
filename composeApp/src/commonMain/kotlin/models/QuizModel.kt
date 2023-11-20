@@ -12,19 +12,19 @@ data class Quiz(
     val questions: List<Question>
 )
 
-data class Answer(
-    val text: String,
-    val isCorrect: Boolean
-)
-
 data class Question(
-    val text: String,
-    val answers: List<Answer>
+    var text: String,
+    var correctAnswer: String,
+    var alternateOption1: String,
+    var alternateOption2: String,
+    var alternateOption3: String,
 )
 
 class QuizModel {
     private val list = MutableStateFlow<List<Quiz>>(emptyList())
     val quizList: StateFlow<List<Quiz>> = list
+    private val questions = MutableStateFlow<List<Question>>(emptyList())
+    val questionList: StateFlow<List<Question>> = questions
 
     init {   // for testing
         val dummyQuizzes = listOf(
@@ -33,23 +33,22 @@ class QuizModel {
                 questions = listOf(
                     Question(
                         text = "What is 2 + 2?",
-                        answers = listOf(
-                            Answer(text = "3", isCorrect = false),
-                            Answer(text = "4", isCorrect = true),
-                            Answer(text = "5", isCorrect = false)
-                        )
-                    ),
+                        correctAnswer = "3",
+                         alternateOption1 = "4",
+                         alternateOption2 = "5",
+                        alternateOption3 = "6"
+                        ),
                     Question(
                         text = "What is 2 + 3?",
-                        answers = listOf(
-                            Answer(text = "3", isCorrect = false),
-                            Answer(text = "4", isCorrect = false),
-                            Answer(text = "5", isCorrect = true)
+                        correctAnswer = "3",
+                        alternateOption1 = "4",
+                        alternateOption2 = "5",
+                        alternateOption3 = "6"
                         )
-                    )
+                    ),
                 )
             )
-        )
+
 
         list.value = dummyQuizzes
     }
@@ -66,5 +65,9 @@ class QuizModel {
 
         // notify ui
         deleted.tryEmit(quiz)
+    }
+
+    fun addQuestion(question: Question) {
+        questions.value = questions.value + question
     }
 }
