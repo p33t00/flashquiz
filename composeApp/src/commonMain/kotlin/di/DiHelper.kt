@@ -6,6 +6,7 @@ import com.pa1479.bth.g3.flashquiz.database.FlashCardsDB
 import domain.LocalDataSource
 import domain.data.SqlDelightLocalDataSource
 import org.koin.dsl.module
+import ui.screens.QuizListViewModel
 
 val appModules = module {
     single { "hello" }
@@ -22,6 +23,10 @@ val appModules = module {
 
     factory {
         TestViewModel(get())
+    }
+
+    factory {
+        QuizListViewModel(get())
     }
 }
 

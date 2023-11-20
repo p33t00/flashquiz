@@ -3,6 +3,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,20 +12,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
+import moe.tlaster.precompose.koin.koinViewModel
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.koin.compose.KoinContext
+import org.koin.core.parameter.parametersOf
 import ui.components.AppBar
 import ui.screens.LoginScreen
 import ui.screens.MainScreen
 import ui.screens.QuizListScreen
+import ui.screens.QuizListViewModel
 import ui.screens.SubScreen
 
 enum class RoutesToScreen(val title: String) {
     Home("Home"),
     Login("Login"),
+    QuizStats("Quiz Statistics"),
     QuizList("Quiz List"),
     SubScreen("Sub screen")
 }
@@ -66,27 +71,27 @@ fun App() {
                     color = androidx.compose.material3.MaterialTheme.colorScheme.background
                 ) {
                     Scaffold(
-                        topBar = {
-                            if (currentScreen != RoutesToScreen.Login) {
-                                AppBar(currentScreen)
-//                            AppBar(
-//                                currentScreen,
-//                                navController::navigateUp,
-//                                {
-//                                    scope.launch {
-//                                        navDrawerState.open()
-//                                    }
-//                                },
-//                                navController.previousBackStackEntry != null,
-//                                { logOutHandler() }
-//                            )
-                            }
-                        }
+//                        topBar = {
+//                            if (currentScreen != RoutesToScreen.Login) {
+//                                AppBar(currentScreen)
+////                            AppBar(
+////                                currentScreen,
+////                                navController::navigateUp,
+////                                {
+////                                    scope.launch {
+////                                        navDrawerState.open()
+////                                    }
+////                                },
+////                                navController.previousBackStackEntry != null,
+////                                { logOutHandler() }
+////                            )
+//                            }
+//                        }
                     ) {
                         NavHost(
                             navigator = navigator,
                             navTransition = NavTransition(),
-                            initialRoute = RoutesToScreen.Home.name,
+                            initialRoute = RoutesToScreen.QuizList.name,
                         ) {
                             scene(
                                 route = RoutesToScreen.Home.name,
@@ -113,7 +118,20 @@ fun App() {
                                 route = RoutesToScreen.QuizList.name,
                                 navTransition = NavTransition(),
                             ) {
-                                QuizListScreen()
+                                val quizListViewModel = koinViewModel(vmClass = QuizListViewModel::class) { parametersOf() }
+                                val quizzes by quizListViewModel.quizzes.collectAsState()
+
+                                QuizListScreen(
+                                    quizzes = quizzes,
+                                    currentScreen = currentScreen,
+                                    onAddQuizClick = { /* navigate to add quiz screen */ },
+                                    onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
+                                    onQuizClick = { selectedQuiz ->
+                                        navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.name}")
+                                    },
+                                    onQuizDelete = { quizListViewModel.deleteQuizzes() },
+                                    onQuizChecked = {id -> quizListViewModel.checkToggleQuiz(id) }
+                                )
                             }
                             // TODO: Please add more screens and don't forget to add RoutesToScreen route path
                         }

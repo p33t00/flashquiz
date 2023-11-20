@@ -38,10 +38,12 @@ deleteQuiz {
     DELETE FROM card WHERE quiz_id = :id;
 }
 
-
 INSERT INTO quiz (`name`) VALUES
 ('Spanish Lang'),
-('Math quiz');
+('Math quiz'),
+('Machine Learning Test'),
+('Android course quiz'),
+('Movie quiz');
 
 INSERT INTO card (quiz_id, question, answer_a, answer_b, answer_c, answer_d, correct)
 VALUES

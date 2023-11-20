@@ -39,7 +39,6 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
         queries.deleteQuiz(id.toLong())
     }
 
-
 //    override fun getQuizWithCards(id: Int): Quiz {
 //        val qNaRaw = queries.getQuizCards(id.toLong()).executeAsList()
 //        val qNa: List<Card> = qNaRaw
