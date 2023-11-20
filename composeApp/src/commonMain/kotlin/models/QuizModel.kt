@@ -67,7 +67,7 @@ class QuizModel {
         deleted.tryEmit(quiz)
     }
 
-    fun addQuestion(question: Question) {
-        questions.value = questions.value + question
+    fun addQuestion(newQuestion: Question) {
+        questions.value = questions.value + newQuestion
     }
 }

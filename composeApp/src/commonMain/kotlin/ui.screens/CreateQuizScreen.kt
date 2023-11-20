@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -78,6 +81,16 @@ fun CreateQuizScreen(
                 label = { Text("Quiz name") }
             )
 
+            LazyColumn {
+                items(quizModel.questionList.value.distinct()) { question ->
+                    QuestionItemRow(
+                        question = question,
+                        onClick = { /*TODO*/ },
+
+                    )
+                }
+            }
+
         }
 
         // add flashcard button
@@ -137,8 +150,8 @@ fun CreateQuizScreen(
 
     if (addQuestion) {
         CreateQuestion(
+            quizModel,
             onSave = {
-                quizModel.addQuestion(it)
                 addQuestion = false
             },
             onDismissRequest = {
@@ -150,11 +163,15 @@ fun CreateQuizScreen(
 
 @Composable
 fun CreateQuestion(
+    quizModel: QuizModel,
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
 ) {
-
-    var question by remember { mutableStateOf(Question("", "", "", "", "")) }
+    var questionText by remember { mutableStateOf("") }
+    var correctAnswer by remember { mutableStateOf("") }
+    var alternate1 by remember { mutableStateOf("") }
+    var alternate2 by remember { mutableStateOf("") }
+    var alternate3 by remember { mutableStateOf("") }
 
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -187,8 +204,8 @@ fun CreateQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    value = question.text,
-                    onValueChange = { question.text = it },
+                    value = questionText,
+                    onValueChange = { questionText = it },
                     label = { Text("Question") }
                 )
 
@@ -198,8 +215,8 @@ fun CreateQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    value = question.correctAnswer,
-                    onValueChange = { question.correctAnswer = it },
+                    value = correctAnswer,
+                    onValueChange = { correctAnswer = it },
                     label = { Text("Correct Answer") }
                 )
 
@@ -209,8 +226,8 @@ fun CreateQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    value = question.alternateOption1,
-                    onValueChange = { question.alternateOption1 = it },
+                    value = alternate1,
+                    onValueChange = { alternate1 = it },
                     label = { Text("Alternate Option 1") }
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -219,8 +236,8 @@ fun CreateQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    value = question.alternateOption2,
-                    onValueChange = { question.alternateOption2 = it },
+                    value = alternate2,
+                    onValueChange = { alternate2 = it },
                     label = { Text("Alternate Option 2") }
                 )
 
@@ -230,8 +247,8 @@ fun CreateQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    value = question.alternateOption3,
-                    onValueChange = { question.alternateOption3 = it },
+                    value = alternate3,
+                    onValueChange = { alternate3 = it },
                     label = { Text("Alternate Option 3") }
                 )
 
@@ -242,20 +259,60 @@ fun CreateQuestion(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                 ) {
-                    TextButton(
+                    Button(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.padding(8.dp),
                     ) {
                         Text("Cancel")
                     }
-                    TextButton(
-                        onClick = { onSave.invoke() },
+                    Button(
+                        onClick = {
+                            quizModel.addQuestion(
+                                Question(questionText, correctAnswer, alternate1, alternate2, alternate3)
+                            )
+                            onSave.invoke() },
                         modifier = Modifier.padding(8.dp),
                     ) {
                         Text("Save")
                     }
                 }
             }
+        }
+    }
+}
+
+
+@Composable
+fun QuestionItemRow(
+    question: Question,
+    onClick: (Question) -> Unit
+) {
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                onClick.invoke(question)
+            }
+            .shadow(4.dp)
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = question.text,
+                fontSize = 16.sp,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
