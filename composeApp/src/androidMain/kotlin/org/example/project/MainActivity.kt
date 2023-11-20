@@ -9,7 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import models.FlashcardModel
 import models.LoginModel
 import models.QuizModel
 import models.SignupModel
@@ -29,7 +28,6 @@ class MainActivity : ComponentActivity() {
         val loginModel = LoginModel()
         val signupModel = SignupModel()
         val quizModel = QuizModel()
-        val flashcardModel = FlashcardModel()
 
 
         // Launch Compose UI
@@ -95,31 +93,12 @@ class MainActivity : ComponentActivity() {
 
                 composable("createQuiz") {
                     CreateQuizScreen(
+                        quizModel = quizModel,
                         onLogoutClick = { navController.navigate("login") },
                         onSaveClick = { navController.popBackStack() },
                         onBackClick = { navController.popBackStack() }
                     )
                 }
-/*
-                composable("createFlashcard") {
-                    CreateFlashcardScreen(
-                        onClick = { navController.popBackStack() }, // todo: This should save flashcard values
-                        onBackClick = { navController.popBackStack() }
-                    )
-                }
-                composable("flashcard/{flashcardName}") { backStackEntry ->
-                    val flashcardName = backStackEntry.arguments?.getString("question")
-                    val selectedFlashcard = flashcardModel.flashcardList.value.find { it.question == flashcardName }
-
-                    selectedFlashcard?.let {
-                        FlashcardViewScreen(
-                            flashcard = it,
-                            onBackClick = { navController.popBackStack() }
-                        )
-                    }
-                }
-
- */
             }
         }
     }
