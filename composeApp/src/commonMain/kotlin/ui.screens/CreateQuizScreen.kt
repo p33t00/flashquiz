@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import models.Question
+import models.Quiz
 import models.QuizModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -55,7 +56,6 @@ fun CreateQuizScreen(
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
 
 
@@ -111,7 +111,11 @@ fun CreateQuizScreen(
 
         // Save quiz button
         FloatingActionButton(
-            onClick = onSaveClick,
+            onClick = {
+                val quiz = Quiz(quizName, questions = quizModel.questionList.value.distinct())
+                quizModel.addQuiz(quiz)
+                onSaveClick.invoke()
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
