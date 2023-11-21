@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import domain.model.Card
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
@@ -24,11 +25,14 @@ import ui.screens.LoginScreen
 import ui.screens.MainScreen
 import ui.screens.QuizListScreen
 import ui.screens.QuizListViewModel
+import ui.screens.QuizScreen
+import ui.screens.QuizViewModel
 import ui.screens.SubScreen
 
 enum class RoutesToScreen(val title: String) {
     Home("Home"),
     Login("Login"),
+    Quiz("Quiz"),
     QuizStats("Quiz Statistics"),
     QuizList("Quiz List"),
     SubScreen("Sub screen")
@@ -113,6 +117,18 @@ fun App() {
                                 navTransition = NavTransition(),
                             ) {
                                 LoginScreen()
+                            }
+                            scene(
+                                route = RoutesToScreen.Quiz.name + "/{id}",
+                                navTransition = NavTransition(),
+                            ) {backStackEntry ->
+                                val quizViewModel = koinViewModel(vmClass = QuizViewModel::class) { parametersOf() }
+                                val cards: List<Card> = quizViewModel.getQuizCards(backStackEntry.path<Int>("id"))
+                                QuizScreen(
+                                    cards = cards,
+                                    onBackClick = { navigator.popBackStack() },
+                                    backToQuizListClick = { navigator.navigate(RoutesToScreen.QuizList.name) }
+                                )
                             }
                             scene(
                                 route = RoutesToScreen.QuizList.name,

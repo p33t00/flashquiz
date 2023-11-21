@@ -21,12 +21,11 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
         return queries.getQuizCards(id.toLong()).executeAsList().map {
             Card(
                 it.id.toInt(),
-                it.question,
-                it.answer_a,
-                it.answer_b,
-                it.answer_c,
-                it.answer_d,
-                it.correct
+                it.text,
+                it.correct_answer,
+                it.option_1,
+                it.option_2,
+                it.option_3
             )
         }
     }
@@ -45,12 +44,11 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
 //            .map {
 //                Card(
 //                    it.id.toInt(),
-//                    it.question,
-//                    it.answer_a,
-//                    it.answer_b,
-//                    it.answer_c,
-//                    it.answer_d,
-//                    it.correct
+//                    it.text,
+//                    it.correct_answer,
+//                    it.option_1,
+//                    it.option_2,
+//                    it.option_3
 //                )
 //            }
 //        val record = qNaRaw.first()
