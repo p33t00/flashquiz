@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import domain.model.Achievement
 import domain.model.Card
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
@@ -122,12 +123,15 @@ fun App() {
                                 route = RoutesToScreen.Quiz.name + "/{id}",
                                 navTransition = NavTransition(),
                             ) {backStackEntry ->
+                                val quizId = backStackEntry.path<Int>("id")
                                 val quizViewModel = koinViewModel(vmClass = QuizViewModel::class) { parametersOf() }
-                                val cards: List<Card> = quizViewModel.getQuizCards(backStackEntry.path<Int>("id"))
+                                val cards: List<Card> = quizViewModel.getQuizCards(quizId)
+
                                 QuizScreen(
                                     cards = cards,
                                     onBackClick = { navigator.popBackStack() },
-                                    backToQuizListClick = { navigator.navigate(RoutesToScreen.QuizList.name) }
+                                    backToQuizListClick = { navigator.navigate(RoutesToScreen.QuizList.name) },
+                                    onQuizComplete = {score: String -> quizViewModel.storeScore(Achievement(quizId!!, score, ""))}
                                 )
                             }
                             scene(

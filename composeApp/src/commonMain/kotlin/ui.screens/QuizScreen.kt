@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import domain.model.Achievement
 import domain.model.Card
 
 
@@ -42,13 +43,14 @@ import domain.model.Card
 fun QuizScreen(
     cards: List<Card>,
     onBackClick: () -> Unit,
-    backToQuizListClick: () -> Unit
+    backToQuizListClick: () -> Unit,
+    onQuizComplete: (String) -> Unit
 ) {
-    println(cards)
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var correctAnswers by remember { mutableStateOf(0) }
     var answeredQuestions by remember { mutableStateOf(0) }
     var selectedAnswer by remember { mutableStateOf<String?>(null) }
+    var score: String = ""
 
     Scaffold(
         topBar = {
@@ -113,8 +115,6 @@ fun QuizScreen(
                             answeredQuestions++
                             currentQuestionIndex++
                             selectedAnswer = null
-
-
                         }
                     },
                     enabled = selectedAnswer != null,
@@ -127,46 +127,60 @@ fun QuizScreen(
                     Text("Next")
                 }
             } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = "Quiz Completed!",
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF926EB4),
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    Text(
-                        text = "$correctAnswers/${cards.size} questions answered correctly",
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = backToQuizListClick,
-                        modifier = Modifier
-                            .width(200.dp)
-                            .padding(top = 8.dp, bottom = 8.dp)
-                            .clip(RoundedCornerShape(percent = 50)),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF926EB4))
-                    ) {
-                        Text(
-                            "Back to quiz list",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            fontSize = 16.sp
-                        )
-                    }
-                }
+                score = "$correctAnswers/${cards.size}"
+                QuizComplete(
+                    score = score,
+                    backToQuizListClick = backToQuizListClick,
+                    onQuizComplete = { onQuizComplete(score) }
+                )
             }
         }
     }
+}
 
+@Composable
+fun QuizComplete(
+    score: String,
+    backToQuizListClick: () -> Unit,
+    onQuizComplete: () -> Unit
+) {
+    onQuizComplete()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = "Quiz Completed!",
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF926EB4),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        Text(
+            text = "$score questions answered correctly",
+            fontSize = 20.sp,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = backToQuizListClick,
+            modifier = Modifier
+                .width(200.dp)
+                .padding(top = 8.dp, bottom = 8.dp)
+                .clip(RoundedCornerShape(percent = 50)),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF926EB4))
+        ) {
+            Text(
+                "Back to quiz list",
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                fontSize = 16.sp
+            )
+        }
+    }
 }
 
 @Composable

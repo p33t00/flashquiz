@@ -36,6 +36,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.android.driver)
             implementation(libs.koin.android)
+            implementation("joda-time:joda-time:2.12.5")
         }
         iosMain.dependencies {
             implementation(libs.native.driver)

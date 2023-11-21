@@ -30,6 +30,10 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
         }
     }
 
+    override fun storeScore(score: Achievement) {
+        queries.storeScore(score.quizId.toLong(), score.score, score.created)
+    }
+
     override fun deleteCard(id: Int) {
         queries.deleteCard(id.toLong())
     }

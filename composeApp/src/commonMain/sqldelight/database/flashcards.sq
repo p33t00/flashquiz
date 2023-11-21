@@ -28,6 +28,9 @@ SELECT * FROM achievements WHERE quiz_id = ? ORDER BY created ASC;
 getQuizCards:
 SELECT * FROM card WHERE quiz_id = ?;
 
+storeScore:
+INSERT INTO achievements (quiz_id, score, created) VALUES (:qid, :score, :date);
+
 deleteCard:
 DELETE FROM card WHERE id = ?;
 
