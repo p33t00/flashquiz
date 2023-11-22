@@ -17,6 +17,8 @@ import domain.model.Card
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
+import moe.tlaster.precompose.lifecycle.Lifecycle
+import moe.tlaster.precompose.lifecycle.LifecycleObserver
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.rememberNavigator
@@ -178,6 +180,7 @@ fun App() {
                                 navTransition = NavTransition(),
                             ) {
                                 val quizListViewModel = koinViewModel(vmClass = QuizListViewModel::class) { parametersOf() }
+                                quizListViewModel.initQuizList()
                                 val quizzes by quizListViewModel.quizzes.collectAsState()
 
                                 QuizListScreen(
@@ -210,14 +213,12 @@ fun App() {
                                         },
                                         onEditQuizClick = {
                                         },
-                                        onDeleteQuizClick = {
-                                            //to be added
-                                        },
+                                        onDeleteQuizClick = { quizStatsViewModel.deleteQuiz(quiz.id)},
                                         onLogoutClick = {
                                             navigator.navigate(RoutesToScreen.Login.name)
                                         },
                                         onQuizClick = {
-                                            navigator.navigate(RoutesToScreen.Quiz.name + "/$quizId")
+                                            navigator.navigate(RoutesToScreen.Quiz.name + "/${quiz.id}")
                                         }
                                     )
                                 } else {

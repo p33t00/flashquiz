@@ -11,4 +11,6 @@ class QuizStatsViewModel(val quizId: Int, private val dataSource: LocalDataSourc
     init {
         quiz.value = dataSource.getQuizWithAchievements(quizId)
     }
+
+    fun deleteQuiz(id: Int) = dataSource.deleteQuiz(id)
 }

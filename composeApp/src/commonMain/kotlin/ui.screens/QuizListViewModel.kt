@@ -13,9 +13,6 @@ import moe.tlaster.precompose.viewmodel.viewModelScope
 class QuizListViewModel(private val dataSource: LocalDataSource): ViewModel() {
     private val _quizzes = MutableStateFlow(listOf<Quiz>())
     val quizzes = _quizzes.asStateFlow()
-    init {
-        initQuizList()
-    }
 
     fun deleteQuizzes() {
         viewModelScope.launch {
@@ -31,7 +28,7 @@ class QuizListViewModel(private val dataSource: LocalDataSource): ViewModel() {
         }
     }
 
-    private fun initQuizList() {
+    fun initQuizList() {
         _quizzes.value = dataSource.getQuizzes()
     }
 }
