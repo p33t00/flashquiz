@@ -1,12 +1,13 @@
 package ui.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -26,7 +27,6 @@ import models.Question
 import models.Quiz
 import models.QuizModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CreateQuizScreen(
     quizModel: QuizModel,
@@ -171,6 +171,7 @@ fun CreateQuestion(
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
 ) {
+    var scrollState = rememberScrollState()
     var questionText by remember { mutableStateOf("") }
     var correctAnswer by remember { mutableStateOf("") }
     var alternate1 by remember { mutableStateOf("") }
@@ -182,13 +183,14 @@ fun CreateQuestion(
         // Draw a rectangle shape with rounded corners inside the dialog
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(vertical = 60.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

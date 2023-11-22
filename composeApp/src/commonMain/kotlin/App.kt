@@ -170,7 +170,6 @@ fun App() {
                                     onSaveClick = { navigator.popBackStack() }
                                 )
                             }
-                            // TODO: Please add more screens and don't forget to add RoutesToScreen route path
                         }
                     }
                 }
