@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
@@ -16,7 +17,7 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -27,7 +28,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.ui)
@@ -103,16 +104,3 @@ android {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
-dependencies {
-
-    implementation("androidx.compose.ui:ui:$1.0.1")
-
-    implementation(libs.androidx.navigation.runtime.ktx)
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
-
-    implementation(libs.androidx.ui.tooling.preview.android)
-
-
-}
-
-

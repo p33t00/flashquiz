@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import domain.model.Achievement
 import domain.model.Card
 import kotlinx.coroutines.launch
+import models.QuizModel
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
 import moe.tlaster.precompose.navigation.NavHost
@@ -22,6 +23,7 @@ import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.koin.compose.KoinContext
 import org.koin.core.parameter.parametersOf
 import ui.components.AppBar
+import ui.screens.CreateQuizScreen
 import ui.screens.LoginScreen
 import ui.screens.MainScreen
 import ui.screens.QuizListScreen
@@ -36,7 +38,8 @@ enum class RoutesToScreen(val title: String) {
     Quiz("Quiz"),
     QuizStats("Quiz Statistics"),
     QuizList("Quiz List"),
-    SubScreen("Sub screen")
+    SubScreen("Sub screen"),
+    CreateQuiz("Create Quiz")
 }
 @Composable
 fun App() {
@@ -144,13 +147,27 @@ fun App() {
                                 QuizListScreen(
                                     quizzes = quizzes,
                                     currentScreen = currentScreen,
-                                    onAddQuizClick = { /* navigate to add quiz screen */ },
+                                    onAddQuizClick = { navigator.navigate(RoutesToScreen.CreateQuiz.name) },
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
                                     onQuizClick = { selectedQuiz ->
-                                        navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.name}")
+                                        navigator.navigate(RoutesToScreen.Quiz.name + "/1")
                                     },
                                     onQuizDelete = { quizListViewModel.deleteQuizzes() },
                                     onQuizChecked = {id -> quizListViewModel.checkToggleQuiz(id) }
+                                )
+                            }
+
+                            scene(
+                                route = RoutesToScreen.CreateQuiz.name,
+                                navTransition = NavTransition(),
+                            ) {
+                                val quizModel = QuizModel()
+
+                                CreateQuizScreen(
+                                    quizModel = quizModel,
+                                    onBackClick = { navigator.popBackStack() },
+                                    onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
+                                    onSaveClick = { navigator.popBackStack() }
                                 )
                             }
                             // TODO: Please add more screens and don't forget to add RoutesToScreen route path
