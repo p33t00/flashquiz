@@ -1,5 +1,6 @@
 package ui.screens
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,13 +33,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// login ui code help from: https://medium.com/@dheerubhadoria/compose-multi-platform-login-screen-android-ios-desktop-app-1df1dd424932
 @Composable
-fun LoginScreen(  onLoginButtonClick: () -> Unit,
-                  onNavigateToSignUp: () -> Unit,
-                  loginModel: LoginViewModel
+fun SignUpScreen( onSignupButtonClick: () -> Unit,
+                  onNavigateToLogin: () -> Unit,
+                  signupModel: SignupViewModel
 ) {
 
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -51,23 +51,32 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
 
         Text(
             text = "FlashQuiz",
-            fontSize = 42.sp,
+            fontSize = 40.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             color =  Color(0xFF926EB4),
-            modifier = Modifier.fillMaxWidth()
-                .padding(vertical = 32.dp)
+            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
         )
 
         Text(
-            text = "Login",
-            fontSize = 24.sp,
+            text = "Sign up",
+            fontSize = 26.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth()
-                .padding(vertical = 30.dp)
+            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
         )
 
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Username") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
@@ -96,9 +105,9 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // login button
+        // sign-up button
         Button(
-            onClick = { onLoginButtonClick.invoke() },
+            onClick = { onSignupButtonClick.invoke() },
             modifier = Modifier
                 .width(200.dp)
                 .padding(top = 8.dp, bottom = 8.dp)
@@ -113,20 +122,17 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
             contentPadding = PaddingValues(16.dp),
         ) {
             Text(
-                text = "Log in",
+                text = "Sign up",
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
-                fontSize = 14.sp,
+                color = Color.White
             )
         }
 
-
-        // sign up button
+        // go back button
         Button(
-            onClick = { onNavigateToSignUp.invoke() },
+            onClick = { onNavigateToLogin.invoke() },
             modifier = Modifier.fillMaxWidth()
-                .padding(top = 16.dp)
-                .clip(MaterialTheme.shapes.medium),
+                .padding(top = 16.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Transparent,
                 contentColor =  Color(0xFF926EB4),
@@ -138,11 +144,13 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
             contentPadding = PaddingValues(16.dp),
         ) {
             Text(
-                text = "Don't have an account? Sign up now",
-                fontWeight = FontWeight.Bold,
+                text = "Go back",
                 fontSize = 12.sp,
-                color = Color(0xFF926EB4)
+                fontWeight = FontWeight.Bold,
+                color =  Color(0xFF926EB4),
             )
         }
     }
+
+
 }

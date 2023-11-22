@@ -22,6 +22,15 @@ CREATE TABLE achievements (
 getQuizzes:
 SELECT * FROM quiz ORDER BY name ASC;
 
+getQuizWithAchievements:
+SELECT
+quiz.id AS quiz_id,
+quiz.name AS quiz_name,
+achievements.score,
+achievements.created
+FROM quiz LEFT JOIN achievements ON achievements.quiz_id = quiz.id
+WHERE quiz.id = ?;
+
 getQuizAchievements:
 SELECT * FROM achievements WHERE quiz_id = ? ORDER BY created ASC;
 
