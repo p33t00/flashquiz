@@ -17,7 +17,7 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,7 +28,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.ui)
@@ -104,5 +104,3 @@ android {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
-
-

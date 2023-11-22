@@ -15,16 +15,17 @@ import androidx.compose.ui.Modifier
 import domain.model.Achievement
 import domain.model.Card
 import kotlinx.coroutines.launch
+import models.QuizModel
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
-import moe.tlaster.precompose.lifecycle.Lifecycle
-import moe.tlaster.precompose.lifecycle.LifecycleObserver
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.koin.compose.KoinContext
 import org.koin.core.parameter.parametersOf
+import ui.components.AppBar
+import ui.screens.CreateQuizScreen
 import ui.screens.LoginScreen
 import ui.screens.LoginViewModel
 import ui.screens.MainScreen
@@ -45,7 +46,8 @@ enum class RoutesToScreen(val title: String) {
     Quiz("Quiz"),
     QuizStats("Quiz Statistics"),
     QuizList("Quiz List"),
-    SubScreen("Sub screen")
+    SubScreen("Sub screen"),
+    CreateQuiz("Create Quiz")
 }
 @Composable
 fun App() {
@@ -186,7 +188,7 @@ fun App() {
                                 QuizListScreen(
                                     quizzes = quizzes,
                                     currentScreen = currentScreen,
-                                    onAddQuizClick = { /* navigate to add quiz screen */ },
+                                    onAddQuizClick = { navigator.navigate(RoutesToScreen.CreateQuiz.name) },
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
                                     onQuizClick = { selectedQuiz ->
                                         navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.id}")
@@ -225,20 +227,19 @@ fun App() {
                                     Text("There has been some error with quiz. Please email us regarding this matter techsup@flashq.com")
                                 }
                             }
-                            /*  scene(
-                                  route = RoutesToScreen.QuizView.name + "/{quizId}",
-                                  navTransition = NavTransition(),
-                              ) { backStackEntry ->
-                                  val quizId = backStackEntry.path<Int>("quizId")
-                                  val quiz = quizzes.find { it.id == quizId }
-                                      QuizViewScreen(
-                                          quiz = quiz,
-                                          onBackClick = { navigator.popBackStack() },
-                                          backToQuizListClick = { navigator.navigate(RoutesToScreen.QuizList.name)
-                                          }
-                                      )
-                              }  */
-                            // TODO: Please add more screens and don't forget to add RoutesToScreen route path
+                            scene(
+                                route = RoutesToScreen.CreateQuiz.name,
+                                navTransition = NavTransition(),
+                            ) {
+                                val quizModel = QuizModel()
+
+                                CreateQuizScreen(
+                                    quizModel = quizModel,
+                                    onBackClick = { navigator.popBackStack() },
+                                    onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
+                                    onSaveClick = { navigator.popBackStack() }
+                                )
+                            }
                         }
                     }
                 }
