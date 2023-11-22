@@ -50,16 +50,12 @@ fun QuizStatsScreen(
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
-    val quizId = quiz?.id ?: -1
-    //achievements for the given quizId
-    val achievements = quiz?.achievements ?: emptyList()
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Quiz: ${quiz?.name ?: ""}",
+                        text = "Quiz: ${quiz?.name ?: "-"}",
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -127,13 +123,13 @@ fun QuizStatsScreen(
         ) {
 
             //display quiz statistics if available
-            if (achievements.isNotEmpty()) {
+            if (quiz != null && quiz.achievements.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    items(achievements) { achievement ->
+                    items(quiz.achievements) { achievement ->
                         AchievementItem(achievement)
                     }
                 }
@@ -212,7 +208,7 @@ fun AchievementItem(achievement: Achievement) {
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Quiz ID: ${achievement.quizId}, Score: ${achievement.score}, Created: ${achievement.created}",
+                text = "Score: ${achievement.score}     ${achievement.created}",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,

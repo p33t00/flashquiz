@@ -12,6 +12,19 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
         return queries.getQuizzes().executeAsList().map{ Quiz(it.id.toInt(), it.name, listOf()) }
     }
 
+    override fun getQuizWithAchievements(id: Int): Quiz? {
+        val qWithAchievements = queries.getQuizWithAchievements(id.toLong()).executeAsList()
+        return if (qWithAchievements.isEmpty()) { null }
+        else {
+            qWithAchievements.let { qWa ->
+                val row = qWa.first()
+                val achievements: List<Achievement> = qWa
+                    .filter { a -> a.score != null && a.created != null }
+                    .map { Achievement(it.quiz_id.toInt(), it.score!!, it.created!!) }
+                    Quiz(id = id, name = row.quiz_name, achievements = achievements)
+            }
+        }
+    }
     override fun getQuizAchievements(id: Int): List<Achievement> {
         return queries.getQuizAchievements(id.toLong()).executeAsList()
             .map { Achievement(it.quiz_id.toInt(), it.score, it.created) }

@@ -3,6 +3,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import ui.screens.QuizListScreen
 import ui.screens.QuizListViewModel
 import ui.screens.QuizScreen
 import ui.screens.QuizStatsScreen
+import ui.screens.QuizStatsViewModel
 import ui.screens.QuizViewModel
 import ui.screens.SignUpScreen
 import ui.screens.SignupViewModel
@@ -180,7 +182,7 @@ fun App() {
                                     onAddQuizClick = { /* navigate to add quiz screen */ },
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
                                     onQuizClick = { selectedQuiz ->
-                                        navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.name}")
+                                        navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.id}")
                                     },
                                     onQuizDelete = { quizListViewModel.deleteQuizzes() },
                                     onQuizChecked = {id -> quizListViewModel.checkToggleQuiz(id) }
@@ -190,27 +192,33 @@ fun App() {
                                 route = RoutesToScreen.QuizStats.name + "/{quizId}",
                                 navTransition = NavTransition(),
                             ) { backStackEntry ->
-                                val quizListViewModel = koinViewModel(vmClass = QuizListViewModel::class) { parametersOf() }
-                                val quizzes by quizListViewModel.quizzes.collectAsState()
                                 val quizId = backStackEntry.path<Int?>("quizId") ?: -1
+                                val quizStatsViewModel = koinViewModel(vmClass = QuizStatsViewModel::class) {
+                                    parametersOf(quizId)
+                                }
+                                val quiz = quizStatsViewModel.quiz.value
 
-                                QuizStatsScreen(
-                                    quiz = quizzes.find { it.id == quizId },
-                                    onBackClick = {
-                                        navigator.popBackStack()
-                                    },
-                                    onEditQuizClick = {
-                                    },
-                                    onDeleteQuizClick = {
-                                        //to be added
-                                    },
-                                    onLogoutClick = {
-                                        navigator.navigate(RoutesToScreen.Login.name)
-                                    },
-                                    onQuizClick = {
-                                        navigator.navigate(RoutesToScreen.Quiz.name + "/$quizId")
-                                    }
-                                )
+                                if (quiz != null) {
+                                    QuizStatsScreen(
+                                        quiz = quiz,
+                                        onBackClick = {
+                                            navigator.popBackStack()
+                                        },
+                                        onEditQuizClick = {
+                                        },
+                                        onDeleteQuizClick = {
+                                            //to be added
+                                        },
+                                        onLogoutClick = {
+                                            navigator.navigate(RoutesToScreen.Login.name)
+                                        },
+                                        onQuizClick = {
+                                            navigator.navigate(RoutesToScreen.Quiz.name + "/$quizId")
+                                        }
+                                    )
+                                } else {
+                                    Text("There has been some error with quiz. Please email us regarding this matter techsup@flashq.com")
+                                }
                             }
                             /*  scene(
                                   route = RoutesToScreen.QuizView.name + "/{quizId}",
