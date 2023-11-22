@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import domain.model.Achievement
 import domain.model.Card
 import kotlinx.coroutines.launch
-import models.QuizModel
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
 import moe.tlaster.precompose.navigation.NavHost
@@ -26,6 +25,7 @@ import org.koin.compose.KoinContext
 import org.koin.core.parameter.parametersOf
 import ui.components.AppBar
 import ui.screens.CreateQuizScreen
+import ui.screens.CreateQuizViewModel
 import ui.screens.LoginScreen
 import ui.screens.LoginViewModel
 import ui.screens.MainScreen
@@ -60,7 +60,6 @@ fun App() {
             scope.launch {
                 navigator.currentEntry.collect {
                     currentScreen = RoutesToScreen.valueOf(it?.path?.substringBefore("/") ?: "Home")
-                    println(currentScreen.name)
                 }
             }
 
@@ -210,11 +209,8 @@ fun App() {
                                 if (quiz != null) {
                                     QuizStatsScreen(
                                         quiz = quiz,
-                                        onBackClick = {
-                                            navigator.popBackStack()
-                                        },
-                                        onEditQuizClick = {
-                                        },
+                                        onBackClick = navigator::popBackStack,
+                                        onEditQuizClick = {/*TODO*/},
                                         onDeleteQuizClick = { quizStatsViewModel.deleteQuiz(quiz.id)},
                                         onLogoutClick = {
                                             navigator.navigate(RoutesToScreen.Login.name)
@@ -231,13 +227,19 @@ fun App() {
                                 route = RoutesToScreen.CreateQuiz.name,
                                 navTransition = NavTransition(),
                             ) {
-                                val quizModel = QuizModel()
+                                val createQuizViewModel = koinViewModel(CreateQuizViewModel::class) {
+                                    parametersOf(0)
+                                }
 
                                 CreateQuizScreen(
-                                    quizModel = quizModel,
-                                    onBackClick = { navigator.popBackStack() },
+                                    quiz = createQuizViewModel.quiz.value,
+                                    onBackClick = navigator::popBackStack,
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
-                                    onSaveClick = { navigator.popBackStack() }
+                                    onAddCard = createQuizViewModel::addCard,
+                                    onSaveClick = { quizName ->
+                                        createQuizViewModel.createQuiz(quizName)
+                                        navigator.popBackStack()
+                                    }
                                 )
                             }
                         }

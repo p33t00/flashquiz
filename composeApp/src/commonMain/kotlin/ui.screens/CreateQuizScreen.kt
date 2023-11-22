@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -23,20 +23,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import models.Question
-import models.Quiz
-import models.QuizModel
+import domain.model.Card
+import domain.model.Quiz
 
 @Composable
 fun CreateQuizScreen(
-    quizModel: QuizModel,
+    quiz: Quiz,
     onLogoutClick: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onAddCard: (Card) -> Unit,
+    onSaveClick: (String) -> Unit,
 ) {
-
     var quizName by remember { mutableStateOf("") }
-    var addQuestion by remember { mutableStateOf(false) }
+    var addCard by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -45,23 +44,17 @@ fun CreateQuizScreen(
             .padding(16.dp)
             .clip(MaterialTheme.shapes.medium)
     ) {
-
         IconButton(onClick = onBackClick) {
             Icon(imageVector = Icons.Default.ArrowBack,
                 contentDescription = null)
         }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
-
             Spacer(modifier = Modifier.height(20.dp))
-
-
             Text(
                 text = "Create Quiz",
                 fontSize = 18.sp,
@@ -72,30 +65,25 @@ fun CreateQuizScreen(
                     .padding(10.dp)
                     .wrapContentSize(Alignment.TopCenter)
             )
-
             Spacer(modifier = Modifier.height(24.dp))
-
             OutlinedTextField(
                 value = quizName,
                 onValueChange = { quizName = it },
                 label = { Text("Quiz name") }
             )
-
             LazyColumn {
-                items(quizModel.questionList.value.distinct()) { question ->
-                    QuestionItemRow(
-                        question = question,
+                itemsIndexed(quiz.cards) { _, card ->
+                    CardRow(
+                        card = card,
                         onClick = { /*TODO*/ },
-
                     )
                 }
             }
-
         }
 
         // add flashcard button
         FloatingActionButton(
-            onClick = { addQuestion = true },
+            onClick = { addCard = true },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp),
@@ -112,9 +100,7 @@ fun CreateQuizScreen(
         // Save quiz button
         FloatingActionButton(
             onClick = {
-                val quiz = Quiz(quizName, questions = quizModel.questionList.value.distinct())
-                quizModel.addQuiz(quiz)
-                onSaveClick.invoke()
+                onSaveClick(quizName)
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -152,14 +138,14 @@ fun CreateQuizScreen(
 
     }
 
-    if (addQuestion) {
+    if (addCard) {
         CreateQuestion(
-            quizModel,
-            onSave = {
-                addQuestion = false
+            onSave = {card ->
+                onAddCard(card)
+                addCard = false
             },
             onDismissRequest = {
-                addQuestion = false
+                addCard = false
             }
         )
     }
@@ -167,17 +153,15 @@ fun CreateQuizScreen(
 
 @Composable
 fun CreateQuestion(
-    quizModel: QuizModel,
-    onDismissRequest: () -> Unit,
-    onSave: () -> Unit,
+    onSave: (Card) -> Unit,
+    onDismissRequest: () -> Unit
 ) {
-    var scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
     var questionText by remember { mutableStateOf("") }
     var correctAnswer by remember { mutableStateOf("") }
     var alternate1 by remember { mutableStateOf("") }
     var alternate2 by remember { mutableStateOf("") }
     var alternate3 by remember { mutableStateOf("") }
-
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         // Draw a rectangle shape with rounded corners inside the dialog
@@ -194,7 +178,6 @@ fun CreateQuestion(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-
                 Text(
                     text = "Question",
                     fontSize = 18.sp,
@@ -205,7 +188,6 @@ fun CreateQuestion(
                         .padding(10.dp)
                         .wrapContentSize(Alignment.TopCenter)
                 )
-
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -214,9 +196,7 @@ fun CreateQuestion(
                     onValueChange = { questionText = it },
                     label = { Text("Question") }
                 )
-
                 Spacer(modifier = Modifier.width(4.dp))
-
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -225,9 +205,7 @@ fun CreateQuestion(
                     onValueChange = { correctAnswer = it },
                     label = { Text("Correct Answer") }
                 )
-
                 Spacer(modifier = Modifier.width(4.dp))
-
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -237,7 +215,6 @@ fun CreateQuestion(
                     label = { Text("Alternate Option 1") }
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -246,9 +223,7 @@ fun CreateQuestion(
                     onValueChange = { alternate2 = it },
                     label = { Text("Alternate Option 2") }
                 )
-
                 Spacer(modifier = Modifier.width(4.dp))
-
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -257,9 +232,7 @@ fun CreateQuestion(
                     onValueChange = { alternate3 = it },
                     label = { Text("Alternate Option 3") }
                 )
-
                 Spacer(modifier = Modifier.width(4.dp))
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -273,11 +246,18 @@ fun CreateQuestion(
                     }
                     Button(
                         onClick = {
-                            quizModel.addQuestion(
-                                Question(questionText, correctAnswer, alternate1, alternate2, alternate3)
+                            onSave(
+                                Card(
+                                    0,
+                                    questionText,
+                                    correctAnswer,
+                                    alternate1,
+                                    alternate2,
+                                    alternate3
+                                )
                             )
-                            onSave.invoke() },
-                        modifier = Modifier.padding(8.dp),
+                        },
+                        modifier = Modifier.padding(8.dp)
                     ) {
                         Text("Save")
                     }
@@ -289,21 +269,19 @@ fun CreateQuestion(
 
 
 @Composable
-fun QuestionItemRow(
-    question: Question,
-    onClick: (Question) -> Unit
+fun CardRow(
+    card: Card,
+    onClick: (Card) -> Unit
 ) {
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                onClick.invoke(question)
+                onClick.invoke(card)
             }
             .shadow(4.dp)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -311,11 +289,9 @@ fun QuestionItemRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Spacer(modifier = Modifier.width(8.dp))
-
             Text(
-                text = question.text,
+                text = card.text,
                 fontSize = 16.sp,
                 modifier = Modifier.weight(1f)
             )

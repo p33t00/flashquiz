@@ -31,6 +31,19 @@ achievements.created
 FROM quiz LEFT JOIN achievements ON achievements.quiz_id = quiz.id
 WHERE quiz.id = ?;
 
+getQuizWithCards:
+SELECT
+quiz.id AS quiz_id,
+quiz.name AS quiz_name,
+card.id,
+card.text,
+card.correct_answer,
+card.option_1,
+card.option_2,
+card.option_3
+FROM quiz LEFT JOIN card ON card.quiz_id = quiz.id
+WHERE quiz.id = ?;
+
 getQuizAchievements:
 SELECT * FROM achievements WHERE quiz_id = ? ORDER BY created ASC;
 
@@ -48,6 +61,16 @@ deleteQuiz {
     DELETE FROM card WHERE quiz_id = :id;
 }
 
+insertQuiz {
+    INSERT INTO quiz (`name`) VALUES (:name);
+    SELECT id FROM quiz WHERE name = :name ORDER BY id DESC LIMIT 1;
+}
+
+insertCard:
+INSERT INTO card (quiz_id, text, correct_answer, option_1, option_2, option_3)
+VALUES (:qid, :text, :correct_answer, :option_1, :option_2, :option_3);
+
+
 INSERT INTO quiz (`name`) VALUES
 ('Spanish Lang'),
 ('Math quiz'),
@@ -57,6 +80,7 @@ INSERT INTO quiz (`name`) VALUES
 
 INSERT INTO card (quiz_id, text, correct_answer, option_1, option_2, option_3)
 VALUES
+(1, "How do you say 'good day' ?", "Buenos Dias", "Comoesta chikita", "Casta de La uego", "Buenos noches"),
 (1, "How are you ?", "good", "bad", "fine", "perfect"),
 (1, "What are you doing ?", "Eating", "Homework", "Cooking", "Nothing"),
 (1, "What is the chemical formula of water?", "H2O", "H2O2", "HO", "HO2");

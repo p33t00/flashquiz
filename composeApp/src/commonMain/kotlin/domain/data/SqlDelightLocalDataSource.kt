@@ -25,6 +25,7 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
             }
         }
     }
+
     override fun getQuizAchievements(id: Int): List<Achievement> {
         return queries.getQuizAchievements(id.toLong()).executeAsList()
             .map { Achievement(it.quiz_id.toInt(), it.score, it.created) }
@@ -55,8 +56,9 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
         queries.deleteQuiz(id.toLong())
     }
 
-//    override fun getQuizWithCards(id: Int): Quiz {
-//        val qNaRaw = queries.getQuizCards(id.toLong()).executeAsList()
+    override fun getQuizWithCards(id: Int): Quiz {
+        return Quiz(0, "")
+//        val qNaRaw = queries.getQuizWithCards(id.toLong()).executeAsList()
 //        val qNa: List<Card> = qNaRaw
 //            .map {
 //                Card(
@@ -70,9 +72,20 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
 //            }
 //        val record = qNaRaw.first()
 //        return Quiz(record.quiz_id.toInt(), record.quiz_name, qNa)
-//    }
+    }
 
-    override suspend fun insertQuiz(quiz: Quiz) {
-        TODO("Not yet implemented")
+    override fun insertQuiz(quiz: Quiz) {
+        val qid: Long = queries.insertQuiz(quiz.name).executeAsOne()
+        println("PETE:qid:"+qid)
+        quiz.cards.forEach {
+            queries.insertCard(
+                qid,
+                it.text,
+                it.correctAnswer,
+                it.alternateOption1,
+                it.alternateOption2,
+                it.alternateOption3
+            )
+        }
     }
 }
