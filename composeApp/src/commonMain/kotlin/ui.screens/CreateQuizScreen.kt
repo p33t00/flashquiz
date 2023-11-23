@@ -32,10 +32,13 @@ fun CreateQuizScreen(
     onLogoutClick: () -> Unit,
     onBackClick: () -> Unit,
     onAddCard: (Card) -> Unit,
+    onUpdateCard: (Card, Card) -> Unit,
     onSaveClick: (String) -> Unit,
 ) {
     var quizName by remember { mutableStateOf("") }
     var addCard by remember { mutableStateOf(false) }
+    var updateCard by remember { mutableStateOf(false) }
+    var cardToBeUpdated: Card? by remember { mutableStateOf(null) }
 
     Box(
         modifier = Modifier
@@ -75,7 +78,10 @@ fun CreateQuizScreen(
                 itemsIndexed(quiz.cards) { _, card ->
                     CardRow(
                         card = card,
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                    cardToBeUpdated = card
+                                    updateCard = true
+                                  },
                     )
                 }
             }
@@ -149,10 +155,26 @@ fun CreateQuizScreen(
             }
         )
     }
+
+    if (updateCard && cardToBeUpdated != null) {
+        CreateQuestion(
+            card = cardToBeUpdated,
+            onSave = {card ->
+                onUpdateCard(card, cardToBeUpdated as Card)
+                updateCard = false
+                cardToBeUpdated = null
+            },
+            onDismissRequest = {
+                updateCard = false
+                cardToBeUpdated = null
+            }
+        )
+    }
 }
 
 @Composable
 fun CreateQuestion(
+    card: Card? = null,
     onSave: (Card) -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -162,6 +184,14 @@ fun CreateQuestion(
     var alternate1 by remember { mutableStateOf("") }
     var alternate2 by remember { mutableStateOf("") }
     var alternate3 by remember { mutableStateOf("") }
+
+    if (card != null) {
+        questionText = card.text
+        correctAnswer = card.correctAnswer
+        alternate1 = card.alternateOption1
+        alternate2 = card.alternateOption2
+        alternate3 = card.alternateOption3
+    }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         // Draw a rectangle shape with rounded corners inside the dialog

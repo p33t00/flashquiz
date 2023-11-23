@@ -10,6 +10,9 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     var quiz = mutableStateOf(Quiz(0, ""))
         private set
 
+    var card = mutableStateOf(Card(0, "", "", "", "", ""))
+        private set
+
     init {
         if (quizId > 0) initQuiz(quizId)
     }
@@ -33,5 +36,15 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
 
     fun updateQuiz() {
 
+    }
+
+    fun updateCard(newCard: Card, oldCard: Card) {
+        quiz.value = quiz.value.copy(
+            cards = quiz.value.cards.minus(oldCard)
+        )
+        quiz.value = quiz.value.copy(
+            cards = quiz.value.cards.plus(newCard)
+        )
+        println(quiz.value.cards)
     }
 }

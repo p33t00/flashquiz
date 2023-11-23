@@ -23,7 +23,6 @@ import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.koin.compose.KoinContext
 import org.koin.core.parameter.parametersOf
-import ui.components.AppBar
 import ui.screens.CreateQuizScreen
 import ui.screens.CreateQuizViewModel
 import ui.screens.LoginScreen
@@ -236,6 +235,7 @@ fun App() {
                                     onBackClick = navigator::popBackStack,
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
                                     onAddCard = createQuizViewModel::addCard,
+                                    onUpdateCard = createQuizViewModel::updateCard,
                                     onSaveClick = { quizName ->
                                         createQuizViewModel.createQuiz(quizName)
                                         navigator.popBackStack()
