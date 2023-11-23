@@ -153,43 +153,43 @@ fun QuizStatsScreen(
                 }
             }
 
-            // Start quiz button
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                FloatingActionButton(
-                    onClick = onQuizClick,
-                    modifier = Modifier
-                        .widthIn(150.dp),
-                    backgroundColor = Color(0xFFD6C1DF),
-                ) {
-                    Text(
-                        text = "Start Quiz",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
+
+            //delete confirmation dialog
+            if (showDialog) {
+                DeleteConfirmationDialog(
+                    onConfirm = {
+                        // Remove quiz from the model
+                        onDeleteQuizClick()
+                        showDialog = false
+
+                        // Navigate back to quiz list
+                        onBackClick()
+                    },
+                    onDismiss = {
+                        showDialog = false
+                    }
+                )
             }
         }
-
-        //delete confirmation dialog
-        if (showDialog) {
-            DeleteConfirmationDialog(
-                onConfirm = {
-                    // Remove quiz from the model
-                    onDeleteQuizClick()
-                    showDialog = false
-
-                    // Navigate back to quiz list
-                    onBackClick()
-                },
-                onDismiss = {
-                    showDialog = false
-                }
-            )
+        // Start quiz button
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            FloatingActionButton(
+                onClick = onQuizClick,
+                modifier = Modifier
+                    .widthIn(150.dp),
+                backgroundColor = Color(0xFF926EB4),
+            ) {
+                Text(
+                    text = "Start Quiz",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 package ui.screens
 
 import RoutesToScreen
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -139,7 +138,7 @@ fun QuizListScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp),
-                backgroundColor = Color(0xFFD6C1DF),
+                backgroundColor = Color(0xFF926EB4),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
