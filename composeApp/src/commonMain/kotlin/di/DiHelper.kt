@@ -7,9 +7,11 @@ import domain.LocalDataSource
 import domain.data.SqlDelightLocalDataSource
 import org.koin.dsl.module
 import ui.screens.CreateQuizViewModel
+import ui.screens.LoginViewModel
 import ui.screens.QuizListViewModel
 import ui.screens.QuizStatsViewModel
 import ui.screens.QuizViewModel
+import ui.screens.SignupViewModel
 
 val appModules = module {
     single { "hello" }
@@ -42,6 +44,14 @@ val appModules = module {
 
     factory {(quizId: Int) ->
         CreateQuizViewModel(get(), quizId)
+    }
+
+    factory {
+        LoginViewModel()
+    }
+
+    factory {
+        SignupViewModel()
     }
 }
 

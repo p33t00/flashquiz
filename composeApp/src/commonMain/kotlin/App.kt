@@ -105,7 +105,7 @@ fun App() {
                         NavHost(
                             navigator = navigator,
                             navTransition = NavTransition(),
-                            initialRoute = RoutesToScreen.QuizList.name,
+                            initialRoute = RoutesToScreen.Login.name,
                         ) {
                             scene(
                                 route = RoutesToScreen.Home.name,
