@@ -241,6 +241,10 @@ fun CreateQuestion(
                     Button(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.padding(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF926EB4),
+                            contentColor = Color.White
+                        )
                     ) {
                         Text("Cancel")
                     }
@@ -257,7 +261,11 @@ fun CreateQuestion(
                                 )
                             )
                         },
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF926EB4),
+                            contentColor = Color.White
+                        )
                     ) {
                         Text("Save")
                     }
