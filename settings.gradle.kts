@@ -1,4 +1,4 @@
-rootProject.name = "KotlinProject"
+rootProject.name = "FlashQuiz"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
