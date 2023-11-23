@@ -16,14 +16,17 @@ class SignupViewModel : ViewModel() {
         val password: String = ""
     )
 
-  /*  private val username = MutableStateFlow("")
-    val usernameState: StateFlow<String> = username
+    fun setUsername(username: String) {
+        _signupState.value = _signupState.value.copy(username = username)
+    }
 
-    private val email = MutableStateFlow("")
-    val emailState: StateFlow<String> = email
+    fun setEmail(email: String) {
+        _signupState.value = _signupState.value.copy(email = email)
+    }
 
-    private val password = MutableStateFlow("")
-    val passwordState: StateFlow<String> = password */
+    fun setPassword(password: String) {
+        _signupState.value = _signupState.value.copy(password = password)
+    }
 
     fun onSignupClick(onNavigateToLogin: () -> Unit) {
 

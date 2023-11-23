@@ -70,8 +70,8 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
 
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = loginModel.loginState.value.email,
+            onValueChange = { loginModel.setEmail(it) },
             label = { Text("Email") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -83,8 +83,8 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = loginModel.loginState.value.password,
+            onValueChange = { loginModel.setPassword(it) },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
@@ -98,7 +98,7 @@ fun LoginScreen(  onLoginButtonClick: () -> Unit,
 
         // login button
         Button(
-            onClick = { onLoginButtonClick.invoke() },
+            onClick = { onLoginButtonClick.invoke() },   // loginModel.onLoginClick()
             modifier = Modifier
                 .width(200.dp)
                 .padding(top = 8.dp, bottom = 8.dp)

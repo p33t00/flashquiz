@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SignUpScreen( onSignupButtonClick: () -> Unit,
+fun SignupScreen( onSignupButtonClick: () -> Unit,
                   onNavigateToLogin: () -> Unit,
                   signupModel: SignupViewModel
 ) {
@@ -67,8 +67,8 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
         )
 
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
+            value = signupModel.signupState.value.username,
+            onValueChange = { signupModel.setUsername(it) },
             label = { Text("Username") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -79,8 +79,8 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = signupModel.signupState.value.email,
+            onValueChange = { signupModel.setEmail(it) },
             label = { Text("Email") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -92,8 +92,8 @@ fun SignUpScreen( onSignupButtonClick: () -> Unit,
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = signupModel.signupState.value.password,
+            onValueChange = { signupModel.setPassword(it) },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(

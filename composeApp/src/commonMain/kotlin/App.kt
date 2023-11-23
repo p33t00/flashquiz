@@ -23,7 +23,6 @@ import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.koin.compose.KoinContext
 import org.koin.core.parameter.parametersOf
-import ui.components.AppBar
 import ui.screens.CreateQuizScreen
 import ui.screens.CreateQuizViewModel
 import ui.screens.LoginScreen
@@ -35,7 +34,7 @@ import ui.screens.QuizScreen
 import ui.screens.QuizStatsScreen
 import ui.screens.QuizStatsViewModel
 import ui.screens.QuizViewModel
-import ui.screens.SignUpScreen
+import ui.screens.SignupScreen
 import ui.screens.SignupViewModel
 import ui.screens.SubScreen
 
@@ -150,7 +149,7 @@ fun App() {
                                 val signupViewModel = koinViewModel(vmClass = SignupViewModel::class) { parametersOf() }
                                 val signupState by signupViewModel.signupState.collectAsState()
 
-                                SignUpScreen(
+                                SignupScreen(
                                     onSignupButtonClick = {
                                         navigator.navigate(RoutesToScreen.QuizList.name)
                                     },

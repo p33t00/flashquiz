@@ -10,10 +10,17 @@ class LoginViewModel : ViewModel() {
     val loginState = _loginState.asStateFlow()
 
     data class LoginState(
-        val username: String = "",
+        val email: String = "",
         val password: String = ""
     )
 
+    fun setEmail(email: String) {
+        _loginState.value = _loginState.value.copy(email = email)
+    }
+
+    fun setPassword(password: String) {
+        _loginState.value = _loginState.value.copy(password = password)
+    }
 
    /*  private val email = MutableStateFlow("")
     val emailState: StateFlow<String> = email
@@ -25,8 +32,13 @@ class LoginViewModel : ViewModel() {
     //handle login
     fun onLoginClick(onNavigateToSignUp: () -> Unit) {
 
+
+    // add logic
+
+
         // navigate to SignUpScreen
         onNavigateToSignUp.invoke()
+
 
     }
 }
