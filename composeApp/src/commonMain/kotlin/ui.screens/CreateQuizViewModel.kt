@@ -34,4 +34,21 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     fun updateQuiz() {
 
     }
+
+    fun updateCard(new: Card, old: Card) {
+
+        quiz.value.cards.find { it == old }?.let { card ->
+            card.text = new.text
+            card.correctAnswer = new.correctAnswer
+            card.alternateOption1 = new.alternateOption1
+            card.alternateOption2 = new.alternateOption2
+            card.alternateOption3 = new.alternateOption3
+        }
+
+        quiz.value = quiz.value.copy(
+            cards = quiz.value.cards
+        )
+
+        println(quiz.value.cards)
+    }
 }

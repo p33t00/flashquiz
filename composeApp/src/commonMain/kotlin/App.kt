@@ -232,6 +232,7 @@ fun App() {
                                     onBackClick = navigator::popBackStack,
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
                                     onAddCard = createQuizViewModel::addCard,
+                                    onUpdateCard = createQuizViewModel::updateCard,
                                     onSaveClick = { quizName ->
                                         createQuizViewModel.createQuiz(quizName)
                                         navigator.popBackStack()
