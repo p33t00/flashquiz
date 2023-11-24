@@ -1,48 +1,18 @@
 package ui.screens
 
-import RoutesToScreen
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Checkbox
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Snackbar
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,27 +24,27 @@ import androidx.compose.ui.unit.sp
 import domain.model.Quiz
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuizListScreen(
-    quizzes: List<Quiz>,
-    currentScreen: RoutesToScreen,
+    quizModel: QuizListViewModel,
     onAddQuizClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    onQuizClick: (Quiz) -> Unit,
-    onQuizDelete: () -> Unit,
-    onQuizChecked: (id: Int) -> Unit
+    onQuizClick: (Quiz) -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
 
+    val quizzes by quizModel.quizzes.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = currentScreen.title,
+                        text = "FlashQuiz",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF926EB4),
@@ -109,11 +79,11 @@ fun QuizListScreen(
                             Text("Logout")
                         }
                         DropdownMenuItem(onClick = {
-                            if (quizzes.none { q -> q.isChecked }) {
+                            if (quizModel.quizzes.value.any { it.isChecked }) {
+                                showDialog = true
+                            } else {
                                 showSnackbar = true
                                 snackbarMessage = "Please select a quiz first to delete"
-                            } else {
-                                showDialog = true
                             }
                         }) {
                             Icon(
@@ -145,22 +115,39 @@ fun QuizListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    text = "Quiz List",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .wrapContentSize(Alignment.Center)
+                )
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 if (quizzes.isEmpty()) {
                     Text("No quiz available", fontWeight = FontWeight.Bold)
                 } else {
                     LazyColumn {
-                        items(quizzes) { quiz ->
+                        items(quizzes.distinct()) { quiz ->
                             QuizItemRow(
                                 quiz = quiz,
                                 onQuizClick = onQuizClick,
-                                onQuizChecked = { isChecked -> onQuizChecked(quiz.id) }
+                                onCheckboxChange = { isChecked ->
+                                    quizModel.checkToggleQuiz(quiz.id)
+                                }
                             )
                         }
                     }
                 }
             }
+
 
             // add quiz button
             FloatingActionButton(
@@ -168,7 +155,7 @@ fun QuizListScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp),
-                backgroundColor = Color(0xFF926EB4),
+                backgroundColor = Color(0xFFD6C1DF),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -212,10 +199,12 @@ fun QuizListScreen(
         if (showDialog) {
             DeleteConfirmationDialog(
                 onConfirm = {
-                    onQuizDelete()
+                    quizModel.deleteQuizzes()
                     showDialog = false
                 },
-                onDismiss = { showDialog = false }
+                onDismiss = {
+                    showDialog = false
+                }
             )
         }
     }
@@ -262,11 +251,9 @@ fun DeleteConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
 @Composable
 fun QuizItemRow(
     quiz: Quiz,
-    onQuizChecked: (Boolean) -> Unit,
+    onCheckboxChange: (Boolean) -> Unit,
     onQuizClick: (Quiz) -> Unit
 ) {
-    var isChecked by remember { mutableStateOf(quiz.isChecked) }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -284,10 +271,9 @@ fun QuizItemRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = isChecked,
+                checked = quiz.isChecked,
                 onCheckedChange = {
-                    isChecked = it
-                    onQuizChecked(it)
+                    onCheckboxChange(it)
                 }
             )
 

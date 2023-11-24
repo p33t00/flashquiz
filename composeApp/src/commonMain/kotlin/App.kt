@@ -184,17 +184,14 @@ fun App() {
                                 val quizzes by quizListViewModel.quizzes.collectAsState()
 
                                 QuizListScreen(
-                                    quizzes = quizzes,
-                                    currentScreen = currentScreen,
+                                    quizModel = quizListViewModel,
                                     onAddQuizClick = { navigator.navigate(RoutesToScreen.CreateQuiz.name) },
-                                    onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
-                                    onQuizClick = { selectedQuiz ->
-                                        navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.id}")
-                                    },
-                                    onQuizDelete = { quizListViewModel.deleteQuizzes() },
-                                    onQuizChecked = {id -> quizListViewModel.checkToggleQuiz(id) }
-                                )
+                                    onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) }
+                                ) { selectedQuiz ->
+                                    navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.id}")
+                                }
                             }
+
                             scene(
                                 route = RoutesToScreen.QuizStats.name + "/{quizId}",
                                 navTransition = NavTransition(),
