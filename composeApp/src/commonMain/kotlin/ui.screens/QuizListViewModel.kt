@@ -4,6 +4,7 @@ import domain.LocalDataSource
 import domain.model.Quiz
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.viewmodel.ViewModel
@@ -15,11 +16,8 @@ class QuizListViewModel(private val dataSource: LocalDataSource): ViewModel() {
 
     fun deleteQuizzes() {
         viewModelScope.launch {
-            _quizzes.update { qList ->
-                qList.filter { q -> !q.isChecked }
-            }
-            _quizzes.value.filter { q -> q.isChecked }.forEach { q ->
-                dataSource.deleteQuiz(q.id)
+            _quizzes.getAndUpdate { qList -> qList.filter { q -> !q.isChecked } }.let {qList ->
+                qList.filter { q -> q.isChecked }.forEach { q -> dataSource.deleteQuiz(q.id) }
             }
         }
     }
