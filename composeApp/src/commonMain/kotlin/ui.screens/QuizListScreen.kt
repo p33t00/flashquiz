@@ -44,7 +44,7 @@ fun QuizListScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "FlashQuiz",
+                        text = "QuizList",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF926EB4),
@@ -117,7 +117,7 @@ fun QuizListScreen(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Text(
+            /*    Text(
                     text = "Quiz List",
                     fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
@@ -127,7 +127,7 @@ fun QuizListScreen(
                         .fillMaxWidth()
                         .padding(10.dp)
                         .wrapContentSize(Alignment.Center)
-                )
+                ) */
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -155,7 +155,7 @@ fun QuizListScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp),
-                backgroundColor = Color(0xFFD6C1DF),
+                backgroundColor = Color(0xFF926EB4),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
