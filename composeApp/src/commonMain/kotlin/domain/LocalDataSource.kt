@@ -13,6 +13,7 @@ interface LocalDataSource {
     fun deleteCard(id: Int)
     fun deleteQuiz(id: Int)
     fun insertQuiz(quiz: Quiz)
+    fun updateQuiz(quiz: Quiz)
     fun getQuizWithAchievements(id: Int): Quiz?
     fun getQuizWithCards(id: Int): Quiz
 }

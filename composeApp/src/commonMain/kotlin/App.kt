@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import domain.model.Achievement
 import domain.model.Card
+import domain.model.Quiz
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
@@ -46,7 +47,8 @@ enum class RoutesToScreen(val title: String) {
     QuizStats("Quiz Statistics"),
     QuizList("Quiz List"),
     SubScreen("Sub screen"),
-    CreateQuiz("Create Quiz")
+    CreateQuiz("Create Quiz"),
+    EditQuiz("Edit Quiz")
 }
 @Composable
 fun App() {
@@ -206,7 +208,9 @@ fun App() {
                                     QuizStatsScreen(
                                         quiz = quiz,
                                         onBackClick = navigator::popBackStack,
-                                        onEditQuizClick = {/*TODO*/},
+                                        onEditQuizClick = {
+                                            navigator.navigate(RoutesToScreen.EditQuiz.name + "/${quiz.id}")
+                                        },
                                         onDeleteQuizClick = { quizStatsViewModel.deleteQuiz(quiz.id)},
                                         onLogoutClick = {
                                             navigator.navigate(RoutesToScreen.Login.name)
@@ -219,6 +223,7 @@ fun App() {
                                     Text("There has been some error with quiz. Please email us regarding this matter techsup@flashq.com")
                                 }
                             }
+
                             scene(
                                 route = RoutesToScreen.CreateQuiz.name,
                                 navTransition = NavTransition(),
@@ -235,6 +240,29 @@ fun App() {
                                     onUpdateCard = createQuizViewModel::updateCard,
                                     onSaveClick = { quizName ->
                                         createQuizViewModel.createQuiz(quizName)
+                                        navigator.popBackStack()
+                                    }
+                                )
+                            }
+
+                            scene(
+                                route = RoutesToScreen.EditQuiz.name + "/{quizId}",
+                                navTransition = NavTransition(),
+                            ) { backStackEntry ->
+                                val quizId = backStackEntry.path<Int>("quizId")
+                                val createQuizViewModel = koinViewModel(CreateQuizViewModel::class) {
+                                    parametersOf(0)
+                                }
+                                val quiz: Quiz = createQuizViewModel.getQuiz(quizId as Int)
+
+                                CreateQuizScreen(
+                                    quiz = quiz,
+                                    onBackClick = navigator::popBackStack,
+                                    onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
+                                    onAddCard = createQuizViewModel::addCard,
+                                    onUpdateCard = createQuizViewModel::updateCard,
+                                    onSaveClick = {
+                                        createQuizViewModel.updateQuiz()
                                         navigator.popBackStack()
                                     }
                                 )

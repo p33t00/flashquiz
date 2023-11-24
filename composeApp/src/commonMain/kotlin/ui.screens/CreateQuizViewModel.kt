@@ -31,8 +31,12 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
         dataSource.insertQuiz(quiz.value)
     }
 
+    fun getQuiz(id: Int): Quiz {
+        quiz.value = dataSource.getQuizWithCards(id)
+        return quiz.value
+    }
     fun updateQuiz() {
-
+        dataSource.updateQuiz(quiz.value)
     }
 
     fun updateCard(new: Card, old: Card) {

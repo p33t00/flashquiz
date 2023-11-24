@@ -39,6 +39,12 @@ fun CreateQuizScreen(
     var addCard by remember { mutableStateOf(false) }
     var updateCard by remember { mutableStateOf(false) }
     var cardToBeUpdated: Card? by remember { mutableStateOf(null) }
+    var screenName = "Create Quiz"
+
+    if (quiz.id != 0) {
+        screenName = "Edit Quiz"
+        quizName = quiz.name
+    }
 
     Box(
         modifier = Modifier
@@ -59,7 +65,7 @@ fun CreateQuizScreen(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "Create Quiz",
+                text = screenName,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,

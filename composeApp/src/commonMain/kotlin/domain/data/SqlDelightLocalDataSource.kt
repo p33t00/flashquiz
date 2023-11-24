@@ -57,7 +57,12 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
     }
 
     override fun getQuizWithCards(id: Int): Quiz {
-        return Quiz(0, "")
+        return Quiz(1, "test update",
+            listOf<Card>(
+                Card(1, "1+2", "3", "1", "4", "5"),
+                Card(1, "1+3", "4", "1", "2", "5")
+            )
+        )
 //        val qNaRaw = queries.getQuizWithCards(id.toLong()).executeAsList()
 //        val qNa: List<Card> = qNaRaw
 //            .map {
@@ -87,5 +92,9 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
                 it.alternateOption3
             )
         }
+    }
+
+    override fun updateQuiz(quiz: Quiz) {
+     // TODO
     }
 }
