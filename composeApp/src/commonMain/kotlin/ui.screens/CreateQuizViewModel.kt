@@ -39,12 +39,19 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     }
 
     fun updateCard(newCard: Card, oldCard: Card) {
+
+        quiz.value.cards.find { it == oldCard }?.let { card ->
+            card.text = newCard.text
+            card.correctAnswer = newCard.correctAnswer
+            card.alternateOption1 = newCard.alternateOption1
+            card.alternateOption2 = newCard.alternateOption2
+            card.alternateOption3 = newCard.alternateOption3
+        }
+
         quiz.value = quiz.value.copy(
-            cards = quiz.value.cards.minus(oldCard)
+            cards = quiz.value.cards
         )
-        quiz.value = quiz.value.copy(
-            cards = quiz.value.cards.plus(newCard)
-        )
+
         println(quiz.value.cards)
     }
 }
