@@ -28,7 +28,6 @@ import ui.screens.CreateQuizScreen
 import ui.screens.CreateQuizViewModel
 import ui.screens.LoginScreen
 import ui.screens.LoginViewModel
-import ui.screens.MainScreen
 import ui.screens.QuizListScreen
 import ui.screens.QuizListViewModel
 import ui.screens.QuizScreen
@@ -37,16 +36,13 @@ import ui.screens.QuizStatsViewModel
 import ui.screens.QuizViewModel
 import ui.screens.SignupScreen
 import ui.screens.SignupViewModel
-import ui.screens.SubScreen
 
 enum class RoutesToScreen(val title: String) {
-    Home("Home"),
     Login("Login"),
     SignUp("SignUp"),
     Quiz("Quiz"),
     QuizStats("Quiz Statistics"),
     QuizList("Quiz List"),
-    SubScreen("Sub screen"),
     CreateQuiz("Create Quiz"),
     EditQuiz("Edit Quiz")
 }
@@ -55,12 +51,12 @@ fun App() {
     PreComposeApp {
         KoinContext {
             val navigator = rememberNavigator()
-            var currentScreen by remember { mutableStateOf(RoutesToScreen.Home) }
+            var currentScreen by remember { mutableStateOf(RoutesToScreen.Login) }
             val scope = rememberCoroutineScope()
 
             scope.launch {
                 navigator.currentEntry.collect {
-                    currentScreen = RoutesToScreen.valueOf(it?.path?.substringBefore("/") ?: "Home")
+                    currentScreen = RoutesToScreen.valueOf(it?.path?.substringBefore("/") ?: "Login")
                 }
             }
 
@@ -109,21 +105,6 @@ fun App() {
                             navTransition = NavTransition(),
                             initialRoute = RoutesToScreen.Login.name,
                         ) {
-                            scene(
-                                route = RoutesToScreen.Home.name,
-                                navTransition = NavTransition(),
-                            ) {
-                                MainScreen({ navigator.navigate(RoutesToScreen.SubScreen.name + "/12") })
-                            }
-                            scene(
-                                route = RoutesToScreen.SubScreen.name + "/{id}",
-                                navTransition = NavTransition(),
-                            ) { backStackEntry ->
-                                SubScreen(
-                                    backStackEntry.path<Int>("id"),
-                                    { navigator.navigate(RoutesToScreen.Home.name) }
-                                )
-                            }
                             // For LoginScreen
                             scene(
                                 route = RoutesToScreen.Login.name,
@@ -161,7 +142,6 @@ fun App() {
                                     signupModel = signupViewModel
                                 )
                             }
-
                             scene(
                                 route = RoutesToScreen.Quiz.name + "/{id}",
                                 navTransition = NavTransition(),
@@ -193,7 +173,6 @@ fun App() {
                                     navigator.navigate(RoutesToScreen.QuizStats.name + "/${selectedQuiz.id}")
                                 }
                             }
-
                             scene(
                                 route = RoutesToScreen.QuizStats.name + "/{quizId}",
                                 navTransition = NavTransition(),

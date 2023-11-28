@@ -1,7 +1,6 @@
 package di
 
 import DBDriverFactory
-import TestViewModel
 import com.pa1479.bth.g3.flashquiz.database.FlashCardsDB
 import domain.LocalDataSource
 import domain.data.SqlDelightLocalDataSource
@@ -14,8 +13,6 @@ import ui.screens.QuizViewModel
 import ui.screens.SignupViewModel
 
 val appModules = module {
-    single { "hello" }
-
     single {
         val driverFactory = DBDriverFactory(get())
         val driver = driverFactory.createDriver()
@@ -24,10 +21,6 @@ val appModules = module {
 
     single<LocalDataSource> {
         SqlDelightLocalDataSource(get())
-    }
-
-    factory {
-        TestViewModel(get())
     }
 
     factory {
