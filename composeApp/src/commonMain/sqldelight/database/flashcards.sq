@@ -53,6 +53,14 @@ SELECT * FROM card WHERE quiz_id = ?;
 storeScore:
 INSERT INTO achievements (quiz_id, score, created) VALUES (:qid, :score, :date);
 
+updateQuiz:
+UPDATE quiz SET name = :name WHERE id = :id;
+
+updateCard:
+UPDATE card
+SET text = :text, correct_answer = :correct, option_1 = :opt1, option_2 = :opt2, option_3 = :opt3
+WHERE id = :id;
+
 deleteCard:
 DELETE FROM card WHERE id = ?;
 

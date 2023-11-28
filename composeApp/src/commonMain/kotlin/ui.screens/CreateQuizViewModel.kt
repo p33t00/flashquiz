@@ -15,7 +15,6 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     }
 
     fun initQuiz(id: Int) {
-//        TODO: implement getQuizWithCards()
         quiz.value = dataSource.getQuizWithCards(id)
     }
 
@@ -40,7 +39,6 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     }
 
     fun updateCard(new: Card, old: Card) {
-
         quiz.value.cards.find { it == old }?.let { card ->
             card.text = new.text
             card.correctAnswer = new.correctAnswer

@@ -57,31 +57,28 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
     }
 
     override fun getQuizWithCards(id: Int): Quiz {
-        return Quiz(1, "test update",
-            listOf<Card>(
-                Card(1, "1+2", "3", "1", "4", "5"),
-                Card(1, "1+3", "4", "1", "2", "5")
-            )
-        )
-//        val qNaRaw = queries.getQuizWithCards(id.toLong()).executeAsList()
-//        val qNa: List<Card> = qNaRaw
-//            .map {
-//                Card(
-//                    it.id.toInt(),
-//                    it.text,
-//                    it.correct_answer,
-//                    it.option_1,
-//                    it.option_2,
-//                    it.option_3
-//                )
-//            }
-//        val record = qNaRaw.first()
-//        return Quiz(record.quiz_id.toInt(), record.quiz_name, qNa)
+        val qNaRaw = queries.getQuizWithCards(id.toLong()).executeAsList()
+
+        if (qNaRaw.isEmpty()) throw NoSuchElementException("Record with provided id: $id does not exist")
+
+        val cards: List<Card> = qNaRaw
+            .map {
+                if (it.id == null) throw NoSuchElementException("Card record with id NULL does not exist")
+                Card(
+                    it.id.toInt(),
+                    it.text ?: "",
+                    it.correct_answer ?: "",
+                    it.option_1 ?: "",
+                    it.option_2 ?: "",
+                    it.option_3 ?: ""
+                )
+            }
+        val record = qNaRaw.first()
+        return Quiz(record.quiz_id.toInt(), record.quiz_name, cards)
     }
 
     override fun insertQuiz(quiz: Quiz) {
         val qid: Long = queries.insertQuiz(quiz.name).executeAsOne()
-        println("PETE:qid:"+qid)
         quiz.cards.forEach {
             queries.insertCard(
                 qid,
@@ -95,6 +92,14 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
     }
 
     override fun updateQuiz(quiz: Quiz) {
-     // TODO
+        queries.updateQuiz(id = quiz.id.toLong(), name = quiz.name)
+        quiz.cards.forEach { queries.updateCard(
+            id = it.id.toLong(),
+            text = it.text,
+            correct = it.correctAnswer,
+            opt1 = it.alternateOption1,
+            opt2 = it.alternateOption2,
+            opt3 = it.alternateOption3
+        )}
     }
 }
