@@ -8,7 +8,7 @@ import moe.tlaster.precompose.viewmodel.ViewModel
 class QuizStatsViewModel(val quizId: Int, private val dataSource: LocalDataSource): ViewModel() {
     val quiz = mutableStateOf<Quiz?>(null)
 
-    init {
+    fun initStats() {
         quiz.value = dataSource.getQuizWithAchievements(quizId)
     }
 

@@ -1,5 +1,6 @@
 package ui.screens
 
+import RoutesToScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -35,16 +36,11 @@ fun CreateQuizScreen(
     onUpdateCard: (Card, Card) -> Unit,
     onSaveClick: (String) -> Unit,
 ) {
-    var quizName by remember { mutableStateOf("") }
+    var quizName by remember { mutableStateOf(quiz.name) }
     var addCard by remember { mutableStateOf(false) }
     var updateCard by remember { mutableStateOf(false) }
     var cardToBeUpdated: Card? by remember { mutableStateOf(null) }
-    var screenName = "Create Quiz"
-
-    if (quiz.id != 0) {
-        screenName = "Edit Quiz"
-        quizName = quiz.name
-    }
+    val screenName = if (quiz.id > 0) RoutesToScreen.EditQuiz.title else RoutesToScreen.CreateQuiz.title
 
     Box(
         modifier = Modifier

@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import domain.model.Achievement
 import domain.model.Card
-import domain.model.Quiz
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.koin.koinViewModel
@@ -181,6 +180,7 @@ fun App() {
                                 val quizStatsViewModel = koinViewModel(vmClass = QuizStatsViewModel::class) {
                                     parametersOf(quizId)
                                 }
+                                quizStatsViewModel.initStats()
                                 val quiz = quizStatsViewModel.quiz.value
 
                                 if (quiz != null) {
@@ -230,18 +230,18 @@ fun App() {
                             ) { backStackEntry ->
                                 val quizId = backStackEntry.path<Int>("quizId")
                                 val createQuizViewModel = koinViewModel(CreateQuizViewModel::class) {
-                                    parametersOf(0)
+                                    parametersOf(quizId)
                                 }
-                                val quiz: Quiz = createQuizViewModel.getQuiz(quizId as Int)
+//                                val quiz = remember { createQuizViewModel.getQuiz(quizId) }
 
                                 CreateQuizScreen(
-                                    quiz = quiz,
+                                    quiz = createQuizViewModel.quiz.value,
                                     onBackClick = navigator::popBackStack,
                                     onLogoutClick = { navigator.navigate(RoutesToScreen.Login.name) },
                                     onAddCard = createQuizViewModel::addCard,
                                     onUpdateCard = createQuizViewModel::updateCard,
-                                    onSaveClick = {
-                                        createQuizViewModel.updateQuiz()
+                                    onSaveClick = {qname ->
+                                        createQuizViewModel.updateQuiz(qname)
                                         navigator.popBackStack()
                                     }
                                 )

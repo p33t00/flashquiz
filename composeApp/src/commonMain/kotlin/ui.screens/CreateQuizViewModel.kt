@@ -22,7 +22,6 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
         quiz.value = quiz.value.copy(
             cards = quiz.value.cards.plus(card)
         )
-        println(quiz.value.cards)
     }
 
     fun createQuiz(name: String) {
@@ -30,11 +29,8 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
         dataSource.insertQuiz(quiz.value)
     }
 
-    fun getQuiz(id: Int): Quiz {
-        quiz.value = dataSource.getQuizWithCards(id)
-        return quiz.value
-    }
-    fun updateQuiz() {
+    fun updateQuiz(name: String) {
+        quiz.value = quiz.value.copy(name = name)
         dataSource.updateQuiz(quiz.value)
     }
 
@@ -50,7 +46,5 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
         quiz.value = quiz.value.copy(
             cards = quiz.value.cards
         )
-
-        println(quiz.value.cards)
     }
 }

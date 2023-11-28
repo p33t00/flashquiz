@@ -61,11 +61,12 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
 
         if (qNaRaw.isEmpty()) throw NoSuchElementException("Record with provided id: $id does not exist")
 
-        val cards: List<Card> = qNaRaw
-            .map {
-                if (it.id == null) throw NoSuchElementException("Card record with id NULL does not exist")
+        val record = qNaRaw.first()
+
+        val cards: List<Card> = record.id?.let {
+            qNaRaw.map {
                 Card(
-                    it.id.toInt(),
+                    it.id!!.toInt(),
                     it.text ?: "",
                     it.correct_answer ?: "",
                     it.option_1 ?: "",
@@ -73,7 +74,8 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
                     it.option_3 ?: ""
                 )
             }
-        val record = qNaRaw.first()
+        } ?: listOf()
+
         return Quiz(record.quiz_id.toInt(), record.quiz_name, cards)
     }
 
@@ -93,13 +95,26 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
 
     override fun updateQuiz(quiz: Quiz) {
         queries.updateQuiz(id = quiz.id.toLong(), name = quiz.name)
-        quiz.cards.forEach { queries.updateCard(
-            id = it.id.toLong(),
-            text = it.text,
-            correct = it.correctAnswer,
-            opt1 = it.alternateOption1,
-            opt2 = it.alternateOption2,
-            opt3 = it.alternateOption3
-        )}
+        quiz.cards.forEach {
+            if (it.id > 0) {
+                queries.updateCard(
+                    id = it.id.toLong(),
+                    text = it.text,
+                    correct = it.correctAnswer,
+                    opt1 = it.alternateOption1,
+                    opt2 = it.alternateOption2,
+                    opt3 = it.alternateOption3
+                )
+            } else {
+                queries.insertCard(
+                    quiz.id.toLong(),
+                    it.text,
+                    it.correctAnswer,
+                    it.alternateOption1,
+                    it.alternateOption2,
+                    it.alternateOption3
+                )
+            }
+        }
     }
 }
