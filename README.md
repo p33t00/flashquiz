@@ -15,6 +15,12 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 
 
 ### Resources:
-- PreCompose: https://tlaster.github.io/PreCompose/
-- PreCompose (Koin) implementation (iOS):
+1. PreCompose: https://tlaster.github.io/PreCompose/
+2. PreCompose (Koin) implementation (iOS):
   https://medium.com/@nitheeshag/building-a-compose-multiplatform-app-with-an-architectural-pattern-e31a85e82927
+
+
+
+### License:
+We would like to declare that we are usign a software called PreCommpose from Tlaster and do not claim any right to it.
+The reference to software can be found in References section p.1.
