@@ -57,13 +57,6 @@ fun QuizScreen(
         topBar = {
             TopAppBar(
                 title = {
-//                    Text(
-//                        text = "Quiz: ${quiz.name}",
-//                        fontSize = 17.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        color = Color.Black,
-//                        modifier = Modifier.fillMaxWidth().padding(14.dp)
-//                    )
                 },
                 navigationIcon = {
                     IconButton(
@@ -88,57 +81,62 @@ fun QuizScreen(
                 .padding(16.dp)
                 .padding(paddingValues)
                 .padding(bottom = 16.dp)
-            .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (currentQuestionIndex < cards.size) {
-                QuizQuestion(
-                    card = cards[currentQuestionIndex],
-                    onAnswerSelected = { answer ->
-                        selectedAnswer = answer
-                    }
-                )
-                LinearProgressIndicator(
-                    progress = currentQuestionIndex.toFloat() / cards.size,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
-                        .height(10.dp),
-                    color = Color(0xFFD6C1DF)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        if (selectedAnswer != null) {
-                            if (selectedAnswer == cards[currentQuestionIndex].correctAnswer) {
-                                correctAnswers++
-                            }
-                            answeredQuestions++
-                            currentQuestionIndex++
-                            selectedAnswer = null
+            if (cards.isNotEmpty()) {
+                if (currentQuestionIndex < cards.size) {
+                    QuizQuestion(
+                        card = cards[currentQuestionIndex],
+                        onAnswerSelected = { answer ->
+                            selectedAnswer = answer
                         }
-                    },
-                    enabled = selectedAnswer != null,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFF926EB4),
-                        contentColor = Color.White
                     )
-                ) {
-                    Text("Next")
+                    LinearProgressIndicator(
+                        progress = currentQuestionIndex.toFloat() / cards.size,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                            .height(10.dp),
+                        color = Color(0xFFD6C1DF)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            if (selectedAnswer != null) {
+                                if (selectedAnswer == cards[currentQuestionIndex].correctAnswer) {
+                                    correctAnswers++
+                                }
+                                answeredQuestions++
+                                currentQuestionIndex++
+                                selectedAnswer = null
+                            }
+                        },
+                        enabled = selectedAnswer != null,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF926EB4),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("Next")
+                    }
+                } else {
+                    score = "$correctAnswers/${cards.size}"
+                    QuizComplete(
+                        score = score,
+                        backToQuizListClick = backToQuizListClick,
+                        onQuizComplete = { onQuizComplete(score) }
+                    )
                 }
             } else {
-                score = "$correctAnswers/${cards.size}"
-                QuizComplete(
-                    score = score,
-                    backToQuizListClick = backToQuizListClick,
-                    onQuizComplete = { onQuizComplete(score) }
-                )
+                Text("No quiz questions available")
             }
         }
     }
 }
+
 
 @Composable
 fun QuizComplete(
