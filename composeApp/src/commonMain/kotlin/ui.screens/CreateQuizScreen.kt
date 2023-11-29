@@ -137,7 +137,7 @@ fun CreateQuizScreen(
         FloatingActionButton(
             onClick = {
                 if (quizName.isNotEmpty()) {
-                    onSaveClick(quizName, )
+                    onSaveClick(quizName)
                 } else null
             },
             modifier = Modifier
