@@ -47,4 +47,10 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
             cards = quiz.value.cards
         )
     }
+
+    fun deleteCard(card: Card) {
+        quiz.value = quiz.value.copy(
+            cards = quiz.value.cards.minus(card)
+        )
+    }
 }

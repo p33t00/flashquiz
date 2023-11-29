@@ -59,6 +59,7 @@ fun CreateQuizScreen(
     onBackClick: () -> Unit,
     onAddCard: (Card) -> Unit,
     onUpdateCard: (Card, Card) -> Unit,
+    onDeleteCard: (Card) -> Unit,
     onSaveClick: (String) -> Unit,
 ) {
     var quizName by remember { mutableStateOf(quiz.name) }
@@ -99,7 +100,8 @@ fun CreateQuizScreen(
             OutlinedTextField(
                 value = quizName,
                 onValueChange = { quizName = it },
-                label = { Text("Quiz name") }
+                label = { Text("Quiz name") },
+                isError = quizName.isEmpty()
             )
             LazyColumn {
                 itemsIndexed(quiz.cards) { _, card ->
@@ -109,7 +111,7 @@ fun CreateQuizScreen(
                                     cardToBeUpdated = card
                                     updateCard = true
                                   },
-                        onDeleteClick = { }
+                        onDeleteClick = { onDeleteCard(card) }
                     )
                 }
             }
@@ -134,7 +136,9 @@ fun CreateQuizScreen(
         // Save quiz button
         FloatingActionButton(
             onClick = {
-                onSaveClick(quizName)
+                if (quizName.isNotEmpty()) {
+                    onSaveClick(quizName, )
+                } else null
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -252,7 +256,8 @@ fun CreateQuestion(
                         .padding(10.dp),
                     value = questionText,
                     onValueChange = { questionText = it },
-                    label = { Text("Question") }
+                    label = { Text("Question") },
+                    isError = questionText.isEmpty()
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
@@ -261,7 +266,8 @@ fun CreateQuestion(
                         .padding(10.dp),
                     value = correctAnswer,
                     onValueChange = { correctAnswer = it },
-                    label = { Text("Correct Answer") }
+                    label = { Text("Correct Answer") },
+                    isError = correctAnswer.isEmpty()
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
@@ -319,6 +325,7 @@ fun CreateQuestion(
                                 )
                             )
                         },
+                        enabled = questionText.isNotEmpty() && correctAnswer.isNotEmpty(),
                         modifier = Modifier.padding(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFF926EB4),
