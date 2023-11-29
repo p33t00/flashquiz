@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import domain.model.Card
+import domain.model.CardStateIntent
 import domain.model.Quiz
 
 @Composable
@@ -105,14 +106,16 @@ fun CreateQuizScreen(
             )
             LazyColumn {
                 itemsIndexed(quiz.cards) { _, card ->
-                    CardRow(
-                        card = card,
-                        onClick = {
-                                    cardToBeUpdated = card
-                                    updateCard = true
-                                  },
-                        onDeleteClick = { onDeleteCard(card) }
-                    )
+                    if (card.stateIntent != CardStateIntent.Delete) {
+                        CardRow(
+                            card = card,
+                            onClick = {
+                                cardToBeUpdated = card
+                                updateCard = true
+                            },
+                            onDeleteClick = { onDeleteCard(card) }
+                        )
+                    }
                 }
             }
         }

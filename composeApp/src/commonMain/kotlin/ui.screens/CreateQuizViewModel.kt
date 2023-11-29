@@ -3,6 +3,7 @@ package ui.screens
 import androidx.compose.runtime.mutableStateOf
 import domain.LocalDataSource
 import domain.model.Card
+import domain.model.CardStateIntent
 import domain.model.Quiz
 import moe.tlaster.precompose.viewmodel.ViewModel
 
@@ -19,6 +20,7 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     }
 
     fun addCard(card: Card) {
+        card.stateIntent = CardStateIntent.Create
         quiz.value = quiz.value.copy(
             cards = quiz.value.cards.plus(card)
         )
@@ -35,12 +37,14 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
     }
 
     fun updateCard(new: Card, old: Card) {
+
         quiz.value.cards.find { it == old }?.let { card ->
             card.text = new.text
             card.correctAnswer = new.correctAnswer
             card.alternateOption1 = new.alternateOption1
             card.alternateOption2 = new.alternateOption2
             card.alternateOption3 = new.alternateOption3
+            card.stateIntent = CardStateIntent.Update
         }
 
         quiz.value = quiz.value.copy(
@@ -50,7 +54,9 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
 
     fun deleteCard(card: Card) {
         quiz.value = quiz.value.copy(
-            cards = quiz.value.cards.minus(card)
+            cards = quiz.value.cards
+                .minus(card)
+                .plus(card.copy(stateIntent = CardStateIntent.Delete))
         )
     }
 }

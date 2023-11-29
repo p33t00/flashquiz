@@ -233,7 +233,6 @@ fun App() {
                                 val createQuizViewModel = koinViewModel(CreateQuizViewModel::class) {
                                     parametersOf(quizId)
                                 }
-//                                val quiz = remember { createQuizViewModel.getQuiz(quizId) }
 
                                 CreateQuizScreen(
                                     quiz = createQuizViewModel.quiz.value,

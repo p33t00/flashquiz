@@ -5,6 +5,7 @@ import com.pa1479.bth.g3.flashquiz.database.FlashCardsDB
 import domain.LocalDataSource
 import domain.model.Achievement
 import domain.model.Card
+import domain.model.CardStateIntent
 
 class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
     private val queries = db.flashcardsQueries
@@ -46,6 +47,28 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
 
     override fun storeScore(score: Achievement) {
         queries.storeScore(score.quizId.toLong(), score.score, score.created)
+    }
+
+    override fun insertCard(qid: Int, card: Card) {
+        queries.insertCard(
+            qid.toLong(),
+            card.text,
+            card.correctAnswer,
+            card.alternateOption1,
+            card.alternateOption2,
+            card.alternateOption3
+        )
+    }
+
+    override fun updateCard(card: Card) {
+        queries.updateCard(
+            id = card.id.toLong(),
+            text = card.text,
+            correct = card.correctAnswer,
+            opt1 = card.alternateOption1,
+            opt2 = card.alternateOption2,
+            opt3 = card.alternateOption3
+        )
     }
 
     override fun deleteCard(id: Int) {
@@ -94,26 +117,14 @@ class SqlDelightLocalDataSource(db: FlashCardsDB): LocalDataSource {
     }
 
     override fun updateQuiz(quiz: Quiz) {
+        println(quiz.cards)
         queries.updateQuiz(id = quiz.id.toLong(), name = quiz.name)
         quiz.cards.forEach {
-            if (it.id > 0) {
-                queries.updateCard(
-                    id = it.id.toLong(),
-                    text = it.text,
-                    correct = it.correctAnswer,
-                    opt1 = it.alternateOption1,
-                    opt2 = it.alternateOption2,
-                    opt3 = it.alternateOption3
-                )
-            } else {
-                queries.insertCard(
-                    quiz.id.toLong(),
-                    it.text,
-                    it.correctAnswer,
-                    it.alternateOption1,
-                    it.alternateOption2,
-                    it.alternateOption3
-                )
+            when(it.stateIntent) {
+                CardStateIntent.Create -> insertCard(quiz.id, it);
+                CardStateIntent.Update -> updateCard(it);
+                CardStateIntent.Delete -> deleteCard(it.id);
+                CardStateIntent.None -> "";
             }
         }
     }

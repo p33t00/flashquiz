@@ -10,6 +10,8 @@ interface LocalDataSource {
     fun getQuizAchievements(id: Int): List<Achievement>
     fun getQuizCards(id: Int): List<Card>
     fun storeScore(score: Achievement)
+    fun insertCard(qid: Int, card: Card)
+    fun updateCard(card: Card)
     fun deleteCard(id: Int)
     fun deleteQuiz(id: Int)
     fun insertQuiz(quiz: Quiz)
