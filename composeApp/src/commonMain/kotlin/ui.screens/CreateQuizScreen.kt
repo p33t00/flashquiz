@@ -68,6 +68,7 @@ fun CreateQuizScreen(
     var updateCard by remember { mutableStateOf(false) }
     var cardToBeUpdated: Card? by remember { mutableStateOf(null) }
     val screenName = if (quiz.id > 0) RoutesToScreen.EditQuiz.title else RoutesToScreen.CreateQuiz.title
+    var isNameEmpty by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -100,9 +101,13 @@ fun CreateQuizScreen(
             Spacer(modifier = Modifier.height(24.dp))
             OutlinedTextField(
                 value = quizName,
-                onValueChange = { quizName = it },
+                onValueChange = {
+                    quizName = it
+                    isNameEmpty = quizName.isEmpty()
+                },
                 label = { Text("Quiz name") },
-                isError = quizName.isEmpty()
+                isError = isNameEmpty
+                //isError = quizName.isEmpty()
             )
             LazyColumn {
                 itemsIndexed(quiz.cards) { _, card ->
@@ -219,6 +224,11 @@ fun CreateQuestion(
     var alternate1 by remember { mutableStateOf("") }
     var alternate2 by remember { mutableStateOf("") }
     var alternate3 by remember { mutableStateOf("") }
+    var isTextEmpty by remember { mutableStateOf(false) }
+    var isAnswerEmpty by remember { mutableStateOf(false) }
+    var isAlt1Empty by remember { mutableStateOf(false) }
+    var isAlt2Empty by remember { mutableStateOf(false) }
+    var isAlt3Empty by remember { mutableStateOf(false) }
 
     if (card != null) {
         questionText = card.text
@@ -258,9 +268,12 @@ fun CreateQuestion(
                         .fillMaxWidth()
                         .padding(10.dp),
                     value = questionText,
-                    onValueChange = { questionText = it },
+                    onValueChange = {
+                        questionText = it
+                        isTextEmpty = questionText.isEmpty()
+                    },
                     label = { Text("Question") },
-                    isError = questionText.isEmpty()
+                    isError = isTextEmpty
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
@@ -268,9 +281,12 @@ fun CreateQuestion(
                         .fillMaxWidth()
                         .padding(10.dp),
                     value = correctAnswer,
-                    onValueChange = { correctAnswer = it },
+                    onValueChange = {
+                        correctAnswer = it
+                        isAnswerEmpty = correctAnswer.isEmpty()
+                    },
                     label = { Text("Correct Answer") },
-                    isError = correctAnswer.isEmpty()
+                    isError = isAnswerEmpty
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
@@ -278,8 +294,12 @@ fun CreateQuestion(
                         .fillMaxWidth()
                         .padding(10.dp),
                     value = alternate1,
-                    onValueChange = { alternate1 = it },
-                    label = { Text("Alternate Option 1") }
+                    onValueChange = {
+                        alternate1 = it
+                        isAlt1Empty = alternate1.isEmpty()
+                    },
+                    label = { Text("Alternate Option 1") },
+                    isError = isAlt1Empty
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
@@ -287,8 +307,12 @@ fun CreateQuestion(
                         .fillMaxWidth()
                         .padding(10.dp),
                     value = alternate2,
-                    onValueChange = { alternate2 = it },
-                    label = { Text("Alternate Option 2") }
+                    onValueChange = {
+                        alternate2 = it
+                        isAlt2Empty = alternate2.isEmpty()
+                    },
+                    label = { Text("Alternate Option 2") },
+                    isError = isAlt2Empty
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 OutlinedTextField(
@@ -296,8 +320,12 @@ fun CreateQuestion(
                         .fillMaxWidth()
                         .padding(10.dp),
                     value = alternate3,
-                    onValueChange = { alternate3 = it },
-                    label = { Text("Alternate Option 3") }
+                    onValueChange = {
+                        alternate3 = it
+                        isAlt3Empty = alternate3.isEmpty()
+                    },
+                    label = { Text("Alternate Option 3") },
+                    isError = isAlt3Empty
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Row(
@@ -328,7 +356,11 @@ fun CreateQuestion(
                                 )
                             )
                         },
-                        enabled = questionText.isNotEmpty() && correctAnswer.isNotEmpty(),
+                        enabled = questionText.isNotEmpty()
+                                && correctAnswer.isNotEmpty()
+                                && alternate1.isNotEmpty()
+                                && alternate2.isNotEmpty()
+                                && alternate3.isNotEmpty(),
                         modifier = Modifier.padding(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFF926EB4),
