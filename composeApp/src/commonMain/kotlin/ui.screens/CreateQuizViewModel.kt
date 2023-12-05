@@ -28,6 +28,9 @@ class CreateQuizViewModel (private val dataSource: LocalDataSource, val quizId: 
 
     fun createQuiz(name: String) {
         quiz.value = quiz.value.copy(name = name)
+        quiz.value = quiz.value.copy(
+            cards = quiz.value.cards.filter { it.stateIntent != CardStateIntent.Delete }
+        )
         dataSource.insertQuiz(quiz.value)
     }
 
