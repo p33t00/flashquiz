@@ -3,8 +3,11 @@ A project by "Team 03" for "PA1479 H23 lp12 Cross-platform mobile application de
 
 ### Team Members
 Damian Wisniewksi (dawi23@student.bth.se)
+
 Marwa Selwaye (maiz23@student.bth.se)
+
 Monica Changor (moch23@student.bth.se)
+
 Piotr Sajkowski (pisj23@student.bth.se)
 
 ## Introduction
