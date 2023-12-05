@@ -1,4 +1,12 @@
 # FlashQuiz - Kotlin Multiplatform Learning App
+A project by "Team 03" for "PA1479 H23 lp12 Cross-platform mobile application development (Distance)" course by BTH.
+
+### Team Members
+Damian Wisniewksi (dawi23@student.bth.se)
+Marwa Selwaye (maiz23@student.bth.se)
+Monica Changor (moch23@student.bth.se)
+Piotr Sajkowski (pisj23@student.bth.se)
+
 ## Introduction
 FlashQuiz is a cross-platform mobile application designed to simplify and enhance the learning process through flashcard quizzes. Taking inspiration from apps like Anki and Kahoot, FlashQuiz aims to provide users with a straightforward and intuitive tool for creating, sharing, and revising quizzes.
 
@@ -22,6 +30,8 @@ Display existing quizzes.
 
 Create new quizzes.
 
+Delete quizzes.
+
 ### Flashcard View
 
 Present quiz questions one by one.
@@ -42,7 +52,7 @@ Add, edit, and delete quiz questions.
 ## This is a Kotlin Multiplatform project targeting Android, iOS.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
+  It contains several sub-folders:
   - `commonMain` is for code that’s common for all targets.
   - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
     For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
@@ -55,7 +65,7 @@ Add, edit, and delete quiz questions.
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
 
 
-### Resources:
+### References:
 1. PreCompose: https://tlaster.github.io/PreCompose/
 2. PreCompose (Koin) implementation (iOS):
   https://medium.com/@nitheeshag/building-a-compose-multiplatform-app-with-an-architectural-pattern-e31a85e82927
@@ -63,5 +73,5 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 
 
 ### License:
-We would like to declare that we are usign a software called PreCommpose from Tlaster and do not claim any right to it.
+We would like to declare that we are using a software called PreCommpose from Tlaster and do not claim any right to it.
 The reference to software can be found in References section p.1.
