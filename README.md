@@ -2,7 +2,7 @@
 A project by "Team 03" for "PA1479 H23 lp12 Cross-platform mobile application development (Distance)" course by BTH.
 
 ### Team Members
-Damian Wisniewksi (dawi23@student.bth.se)
+Damian Wisniewski (dawi23@student.bth.se)
 
 Marwa Selwaye (maiz23@student.bth.se)
 
